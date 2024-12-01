@@ -1,0 +1,41 @@
+.bookmarkButton {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.9);
+	border: 1px solid #6b7a99;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.2s ease;
+	z-index: 10;
+	padding: 0;
+}
+
+.bookmarkButton:hover {
+	background: rgba(255, 255, 255, 1);
+	border: 1px solid #4caf50;
+}
+
+.bookmarkButton svg {
+	color: #666;
+	transition: all 0.2s ease;
+	width: 16px;
+	height: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.bookmarkButton.active {
+	border: 1px solid #4caf50;
+}
+
+.bookmarkButton.active svg {
+	color: #4caf50;
+	fill: #4caf50;
+}

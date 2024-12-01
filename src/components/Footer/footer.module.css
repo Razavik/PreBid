@@ -1,0 +1,17 @@
+.footer {
+	background-color: #002d6e;
+	padding: 40px 0 24px;
+	color: white;
+	margin-top: 100px;
+}
+
+.footerContent {
+	overflow: hidden;
+}
+
+.horline {
+	height: 1px;
+	border: none;
+	background-color: #ffffff1a;
+	margin-top: 49px;
+}

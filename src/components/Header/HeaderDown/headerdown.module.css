@@ -1,0 +1,18 @@
+.headerDownContent {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.headerDownLeft,
+.headerDownRight {
+	display: flex;
+	align-items: center;
+	gap: 40px;
+}
+
+.headerDownRight {
+	gap: 34px;
+	max-width: 707px;
+	width: 100%;
+}

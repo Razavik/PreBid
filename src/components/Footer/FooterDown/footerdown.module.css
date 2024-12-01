@@ -1,0 +1,17 @@
+.footerDown {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	margin-top: 24px;
+}
+
+.socialMenu {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.socialMenu li:hover {
+	transform: scale(1.2);
+	transition: all 0.2s ease;
+}

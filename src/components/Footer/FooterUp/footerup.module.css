@@ -1,0 +1,37 @@
+.footerUp {
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	max-width: 1454px;
+	width: 100%;
+}
+
+.block p {
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 24px;
+}
+
+.block ul {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-top: 16px;
+}
+
+.block li {
+	color: #ffffff99;
+	font-weight: 400;
+}
+
+.block li:hover {
+	color: white;
+}
+
+.vertLine {
+	border: none;
+	height: 116.75px;
+	margin-top: 3.25px;
+	width: 1px;
+	background-color: #ffffff1a;
+}

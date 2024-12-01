@@ -1,0 +1,28 @@
+.unregBlock {
+	background: linear-gradient(0deg, #f7f9fd, #f7f9fd),
+		linear-gradient(
+			310.13deg,
+			rgba(116, 137, 210, 0.2) 20.31%,
+			rgba(247, 249, 253, 0.2) 49.21%
+		);
+}
+
+.unregBlockContent {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 5px;
+}
+
+.title {
+	font-size: 54px;
+	font-weight: 400;
+	line-height: 54px;
+}
+
+.buttonsContainer {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+	margin-top: 40px;
+}

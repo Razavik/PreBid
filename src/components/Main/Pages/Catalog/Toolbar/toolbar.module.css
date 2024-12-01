@@ -1,0 +1,46 @@
+.toolbar {
+	display: flex;
+	justify-content: space-between;
+}
+
+.title {
+	width: max-content;
+	font-size: 18px;
+	line-height: 24px;
+}
+
+.title span:first-child {
+	color: #6b7a99;
+	font-weight: 400;
+}
+
+.title span:last-child {
+	font-weight: 700;
+	margin-left: 8px;
+}
+
+.viewButtons .button {
+	width: 24px;
+	height: 24px;
+	background-color: initial;
+	border: none;
+	cursor: pointer;
+}
+
+.viewButtons .button svg {
+	fill: #6b7a99;
+}
+
+.viewButtons .button:hover svg {
+	fill: #5987d7;
+	transition: all 0.3s ease;
+}
+
+.viewButtons .button.active svg {
+	fill: #004dd5;
+}
+
+.toolbarView{
+	display: flex;
+	gap: 40px;
+}

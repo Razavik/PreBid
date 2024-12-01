@@ -1,0 +1,16 @@
+.headerUp {
+	background-color: #f2f6fc;
+	padding: 18px 0;
+}
+
+.headerUpContent {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.localeSettings {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+}

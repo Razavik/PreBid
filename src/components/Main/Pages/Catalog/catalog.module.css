@@ -1,0 +1,15 @@
+.catalog {
+	margin-top: 65px;
+}
+
+.catalogContent {
+	display: flex;
+	align-items: start;
+	justify-content: center;
+}
+
+.catalogContent > div {
+	display: flex;
+	flex-direction: column;
+	gap: 40px;
+}

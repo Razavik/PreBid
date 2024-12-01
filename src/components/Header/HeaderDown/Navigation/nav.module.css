@@ -1,0 +1,30 @@
+.navMenu {
+	display: flex;
+	align-items: center;
+	gap: 24px;
+}
+
+.menuItem {
+	position: relative;
+	display: inline-block;
+}
+
+.menuItem a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.menuItem::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 1px;
+	background: #004dd5;
+	transition: width 0.3s ease;
+}
+
+.menuItem:hover::after {
+	width: 100%;
+}
