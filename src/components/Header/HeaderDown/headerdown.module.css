@@ -1,3 +1,7 @@
+.headerDown {
+	border-bottom: 1px solid #f2f6fc;
+}
+
 .headerDownContent {
 	display: flex;
 	align-items: center;

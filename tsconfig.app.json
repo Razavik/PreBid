@@ -26,6 +26,7 @@
             "@context/*": ["context/*"],
             "@services/*": ["services/*"],
             "@store/*": ["store/*"],
+            "@hooks/*": ["hooks/*"],
             "@utils/*": ["utils/*"],
             "@components/*": ["components/*"],
             "@ui/*": ["components/ui/*"],

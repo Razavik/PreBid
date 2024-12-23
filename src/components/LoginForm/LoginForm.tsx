@@ -1,11 +1,14 @@
 import { FC, useState, FormEvent } from "react";
 import styles from "./LoginForm.module.css";
 import Button, { ColorButton } from "@ui/Button/Button";
-import eyeOpen from "@assets/img/icons/eye-open.svg";
-import eyeClosed from "@assets/img/icons/eye-closed.svg";
 import closeIcon from "@assets/img/icons/closeButton.svg";
 import { authService } from "@services/auth.service";
 import Modal from "@ui/Modal/Modal";
+import { useAsync } from "../../hooks/useAsync";
+import { Input } from "@ui/inputs/Input/Input";
+import { PasswordInput } from "@ui/inputs/PasswordInput/PasswordInput";
+import { useDispatch } from "react-redux";
+import { setUserInfo } from "@store/slices/userSlice";
 
 interface LoginFormProps {
 	isOpen: boolean;
@@ -16,26 +19,25 @@ interface LoginFormProps {
 export const LoginForm: FC<LoginFormProps> = ({ isOpen, onClose, onRegisterClick }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [showPassword, setShowPassword] = useState(false);
-	const [error, setError] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+	const dispatch = useDispatch();
+	
+	const {
+		execute: handleLogin,
+		isLoading,
+		error,
+	} = useAsync(async () => {
+		await authService.login({
+			username: email,
+			password: password,
+		});
+		const userInfo = await authService.getUserInfo();
+		dispatch(setUserInfo(userInfo));
+		onClose();
+	});
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		setError("");
-		setIsLoading(true);
-
-		try {
-			await authService.login({
-				username: email,
-				password: password,
-			});
-			onClose();
-		} catch (err) {
-			setError("Неверный логин или пароль");
-		} finally {
-			setIsLoading(false);
-		}
+		await handleLogin();
 	};
 
 	const handleRegisterClick = () => {
@@ -65,36 +67,20 @@ export const LoginForm: FC<LoginFormProps> = ({ isOpen, onClose, onRegisterClick
 				</div>
 				<form className={styles.form} onSubmit={handleSubmit}>
 					{error && <div className={styles.error}>{error}</div>}
-					<div className={styles.inputGroup}>
-						<label>Электронная почта</label>
-						<input
-							type="email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							required
-						/>
-					</div>
-					<div className={styles.inputGroup}>
-						<label>Пароль</label>
-						<div className={styles.passwordInput}>
-							<input
-								type={showPassword ? "text" : "password"}
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								required
-							/>
-							<button
-								type="button"
-								className={styles.togglePassword}
-								onClick={() => setShowPassword(!showPassword)}
-							>
-								<img
-									src={showPassword ? eyeOpen : eyeClosed}
-									alt={showPassword ? "Скрыть пароль" : "Показать пароль"}
-								/>
-							</button>
-						</div>
-					</div>
+					<Input
+						type="email"
+						id="email"
+						name="email"
+						label="Электронная почта"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						required
+					/>
+					<PasswordInput
+						value={password}
+						onChange={setPassword}
+						required
+					/>
 					<div className={styles.buttonSeparator}>
 						<Button colorButton={ColorButton.BLUE} disabled={isLoading} type="submit">
 							{isLoading ? "Вход..." : "Войти в аккаунт"}

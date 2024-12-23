@@ -1,0 +1,86 @@
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.trigger {
+	background: none;
+	border: none;
+	padding: 8px 12px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 18px;
+	line-height: 24px;
+	color: #6b7a99;
+}
+
+.arrow {
+	width: 16px;
+	height: 16px;
+	transition: transform 0.2s ease;
+}
+
+.arrowUp {
+	transform: rotate(180deg);
+}
+
+.menu {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	background: white;
+	border-radius: 4px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	min-width: 200px;
+	z-index: 1000;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-10px);
+	transition: all 0.2s ease;
+}
+
+.menuOpen {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.menuContent {
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.userInfo {
+	padding: 16px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.userInfo div {
+	color: #666;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.menuButton {
+	width: 100%;
+	padding: 12px 16px;
+	text-align: left;
+	background: none;
+	border: none;
+	color: #333;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.2s;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.menuButton:last-child {
+	border-bottom: none;
+}
+
+.menuButton:hover {
+	background-color: #f5f5f5;
+}

@@ -32,20 +32,17 @@ const Main = () => {
 		<>
 			<Header onLoginClick={handleLoginClick} />
 			<main>
-				<UnregBlock 
-					onLoginClick={handleLoginClick} 
-					onRegisterClick={handleRegisterClick} 
-				/>
+				<UnregBlock onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />
 				<Outlet />
 			</main>
 			<Footer />
-			<LoginForm 
-				isOpen={isAuthModalOpen} 
-				onClose={handleLoginClose} 
+			<LoginForm
+				isOpen={isAuthModalOpen}
+				onClose={handleLoginClose}
 				onRegisterClick={handleRegisterClick}
 			/>
-			<RegisterForm 
-				isOpen={isRegisterModalOpen} 
+			<RegisterForm
+				isOpen={isRegisterModalOpen}
 				onClose={handleRegisterClose}
 				onLoginClick={handleLoginClick}
 			/>

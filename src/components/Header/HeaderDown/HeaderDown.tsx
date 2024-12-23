@@ -4,10 +4,10 @@ import { RootState } from "@store/index";
 import style from "./headerdown.module.css";
 import Container from "@ui/Container/Container";
 import Nav, { MenuItems } from "./Navigation/Nav";
-import SearchField from "@ui/Input/SearchField";
+import SearchField from "@components/ui/SearchField/SearchField";
 import Button, { ColorButton } from "@ui/Button/Button";
-import { authService } from "@services/auth.service";
 import logo from "@assets/img/icons/logo.svg";
+import { UserDropdown } from "@ui/DropDownLists/UserDropdown/UserDropdown";
 
 interface HeaderDownProps {
 	onLoginClick: () => void;
@@ -15,6 +15,7 @@ interface HeaderDownProps {
 
 const HeaderDown: FC<HeaderDownProps> = ({ onLoginClick }) => {
 	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+	const user = useSelector((state: RootState) => state.user.info);
 
 	const menuItems: MenuItems = {
 		items: [
@@ -29,12 +30,8 @@ const HeaderDown: FC<HeaderDownProps> = ({ onLoginClick }) => {
 		],
 	};
 
-	const handleLogout = () => {
-		authService.logout();
-	};
-
 	return (
-		<div>
+		<div className={style.headerDown}>
 			<Container>
 				<div className={style.headerDownContent}>
 					<div className={style.headerDownLeft}>
@@ -45,23 +42,15 @@ const HeaderDown: FC<HeaderDownProps> = ({ onLoginClick }) => {
 					</div>
 					<div className={style.headerDownRight}>
 						<SearchField placeholder="Поиск" />
-						{isAuthenticated ? (
-							<Button
-								colorButton={ColorButton.BLUE}
-								isLarge={true}
-								onClick={handleLogout}
-							>
-								Выйти
-							</Button>
-						) : (
-							<Button
-								colorButton={ColorButton.BLUE}
-								isLarge={true}
-								onClick={onLoginClick}
-							>
-								Вход / Регистрация
-							</Button>
-						)}
+						<>
+							{isAuthenticated ? (
+								<UserDropdown />
+							) : (
+								<Button colorButton={ColorButton.BLUE} onClick={onLoginClick}>
+									Вход / Регистрация
+								</Button>
+							)}
+						</>
 					</div>
 				</div>
 			</Container>

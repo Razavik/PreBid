@@ -1,6 +1,7 @@
 import { FC } from "react";
-import HeaderUp from "./HeaderUp/HeaderUp";
+import styles from "./Header.module.css";
 import HeaderDown from "./HeaderDown/HeaderDown";
+import HeaderUp from "./HeaderUp/HeaderUp";
 
 interface HeaderProps {
 	onLoginClick: () => void;
@@ -8,7 +9,7 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ onLoginClick }) => {
 	return (
-		<header>
+		<header className={styles.header}>
 			<HeaderUp />
 			<HeaderDown onLoginClick={onLoginClick} />
 		</header>

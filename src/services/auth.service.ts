@@ -1,7 +1,8 @@
 import axiosInstance from './axios.config';
-import { setJwtToken, removeJwtToken } from '@utils/jwt';
+import { setJwtToken, removeJwtToken, getJwtToken } from '@utils/jwt';
 import { store } from '../store';
-import { setAuthenticated } from '../store/authSlice';
+import { setAuthenticated } from "@store/slices/authSlice";
+import { setUserInfo } from "@store/slices/userSlice";
 
 interface LoginData {
     username: string;
@@ -42,7 +43,15 @@ export const authService = {
 
             if (response.data.access_token) {
                 setJwtToken(response.data.access_token);
-                store.dispatch(setAuthenticated(true));
+
+                // Получаем данные пользователя
+                const userInfo = await this.getUserInfo();
+                if (userInfo) {
+                    store.dispatch(setUserInfo(userInfo));
+                    localStorage.setItem("user_info", JSON.stringify(userInfo));
+                    // Устанавливаем isAuthenticated только после получения данных
+                    store.dispatch(setAuthenticated(true));
+                }
             }
 
             return response.data;
@@ -58,7 +67,15 @@ export const authService = {
 
             if (response.data.access_token) {
                 setJwtToken(response.data.access_token);
-                store.dispatch(setAuthenticated(true));
+
+                // Получаем данные пользователя
+                const userInfo = await this.getUserInfo();
+                if (userInfo) {
+                    store.dispatch(setUserInfo(userInfo));
+                    localStorage.setItem("user_info", JSON.stringify(userInfo));
+                    // Устанавливаем isAuthenticated только после получения данных
+                    store.dispatch(setAuthenticated(true));
+                }
             }
 
             return response.data;
@@ -68,18 +85,59 @@ export const authService = {
         }
     },
 
-    logout() {
+    async logout() {
+        // Очищаем все локальные данные
         removeJwtToken();
         store.dispatch(setAuthenticated(false));
+        store.dispatch(setUserInfo(null));
+        localStorage.removeItem("user_info");
     },
 
     getToken() {
         return localStorage.getItem('token');
     },
 
-    checkAuth() {
-        const token = this.getToken();
-        store.dispatch(setAuthenticated(!!token));
-        return !!token;
+    async checkAuth() {
+        try {
+            const token = getJwtToken();
+            if (token) {
+                setJwtToken(token);
+
+                // Проверяем кэшированные данные
+                const cachedUser = localStorage.getItem("user_info");
+                if (cachedUser) {
+                    store.dispatch(setUserInfo(JSON.parse(cachedUser)));
+                    // Устанавливаем isAuthenticated только если есть кэшированные данные
+                    store.dispatch(setAuthenticated(true));
+                }
+
+                // Обновляем данные с сервера
+                const response = await this.getUserInfo();
+                if (response) {
+                    store.dispatch(setUserInfo(response));
+                    localStorage.setItem("user_info", JSON.stringify(response));
+                    store.dispatch(setAuthenticated(true));
+                } else {
+                    // Если не удалось получить данные с сервера
+                    this.logout();
+                }
+            } else {
+                // Если нет токена
+                this.logout();
+            }
+        } catch (error) {
+            console.error('Ошибка при проверке авторизации:', error);
+            this.logout();
+        }
+    },
+
+    async getUserInfo() {
+        try {
+            const response = await axiosInstance.get(`${API_URL}/user/information`);
+            return response.data.client;
+        } catch (error: any) {
+            console.error('Ошибка при получении данных пользователя:', error);
+            throw error;
+        }
     }
 };
