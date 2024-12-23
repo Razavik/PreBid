@@ -10,6 +10,10 @@
     "compilerOptions": {
         "baseUrl": "./src",
         "paths": {
+            "@context/*": ["context/*"],
+            "@services/*": ["services/*"],
+            "@utils/*": ["utils/*"],
+            "@store/*": ["store/*"],
             "@components/*": ["components/*"],
             "@ui/*": ["components/ui/*"],
             "@assets/*": ["assets/*"]

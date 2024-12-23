@@ -23,6 +23,10 @@
         "noUncheckedSideEffectImports": true,
         "baseUrl": "./src",
         "paths": {
+            "@context/*": ["context/*"],
+            "@services/*": ["services/*"],
+            "@store/*": ["store/*"],
+            "@utils/*": ["utils/*"],
             "@components/*": ["components/*"],
             "@ui/*": ["components/ui/*"],
             "@assets/*": ["assets/*"]

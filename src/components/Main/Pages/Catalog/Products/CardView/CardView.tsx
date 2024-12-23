@@ -3,7 +3,8 @@ import { Data } from "../Products";
 import style from "./cardview.module.css";
 import Button, { ColorButton } from "@components/ui/Button/Button";
 import BookmarkButton from "@components/ui/BookmarkButton/BookmarkButton";
-// import ImageSlider from "@components/ui/ImageSlider/ImageSlider";
+import ImageSlider from "@components/ui/ImageSlider/ImageSlider";
+import { Link } from "react-router-dom";
 
 interface Props {
 	data: Data;
@@ -31,13 +32,12 @@ const CardView: FC<Props> = ({ data, setCountProducts }) => {
 								);
 							}}
 						/>
-						<img src={data.path + product.photos[0]} alt="car" />
-						{/* <ImageSlider
+						<ImageSlider
 							images={product.photos.map(
 								(photo) => `${data.path}${photo}`
 							)}
 							alt={`${product.brand} ${product.model}`}
-						/> */}
+						/>
 					</div>
 
 					<div className={style.details}>
@@ -46,7 +46,9 @@ const CardView: FC<Props> = ({ data, setCountProducts }) => {
 						</h3>
 						<p>
 							<span>Номер лота</span>
-							<a href="#">{product.lotNumber}</a>
+							<Link to={`/product/${product.lotNumber}`}>
+								{product.lotNumber}
+							</Link>
 						</p>
 						<p>
 							<span>Дата аукциона</span>

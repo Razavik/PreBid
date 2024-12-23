@@ -6,87 +6,91 @@ import SelectedFilters, {
 	SelectedFilter,
 } from "./SelectedFilters/SelectedFilters";
 
+const vehicleTypes = [
+	{ id: "1", payLoad: "Все транспортные средства" },
+	{ id: "2", payLoad: "Легковые" },
+	{ id: "3", payLoad: "Грузовые" },
+	{ id: "4", payLoad: "Мотоциклы" },
+];
+
+const conditions = [
+	{ id: "1", payLoad: "Новый" },
+	{ id: "2", payLoad: "Б/У" },
+];
+
+const transmissions = [
+	{ id: "1", payLoad: "Механическая" },
+	{ id: "2", payLoad: "Автоматическая" },
+	{ id: "3", payLoad: "Роботизированная" },
+];
+
+const fuelTypes = [
+	{ id: "1", payLoad: "Бензин" },
+	{ id: "2", payLoad: "Дизель" },
+	{ id: "3", payLoad: "Электро" },
+	{ id: "4", payLoad: "Гибрид" },
+];
+
+const driveTypes = [
+	{ id: "1", payLoad: "Передний" },
+	{ id: "2", payLoad: "Задний" },
+	{ id: "3", payLoad: "Полный" },
+];
+
+const bodyTypes = [
+	{ id: "1", payLoad: "Седан" },
+	{ id: "2", payLoad: "Хэтчбек" },
+	{ id: "3", payLoad: "Универсал" },
+	{ id: "4", payLoad: "Внедорожник" },
+	{ id: "5", payLoad: "Купе" },
+	{ id: "6", payLoad: "Кабриолет" },
+	{ id: "7", payLoad: "Пикап" },
+	{ id: "8", payLoad: "Минивэн" },
+];
+
+const cylinders = [
+	{ id: "1", payLoad: "2" },
+	{ id: "2", payLoad: "3" },
+	{ id: "3", payLoad: "4" },
+	{ id: "4", payLoad: "5" },
+	{ id: "5", payLoad: "6" },
+	{ id: "6", payLoad: "8" },
+	{ id: "7", payLoad: "12" },
+];
+
+const statuses = [
+	{ id: "1", payLoad: "В продаже" },
+	{ id: "2", payLoad: "В пути" },
+	{ id: "3", payLoad: "Продано" },
+];
+
+const brands = [
+	{ id: "1", payLoad: "Audi" },
+	{ id: "2", payLoad: "BMW" },
+	{ id: "3", payLoad: "Mercedes-Benz" },
+	{ id: "4", payLoad: "Toyota" },
+	{ id: "5", payLoad: "Volkswagen" },
+	{ id: "6", payLoad: "Honda" },
+	{ id: "7", payLoad: "Hyundai" },
+	{ id: "8", payLoad: "Kia" },
+];
+
+const models = [
+	{ id: "1", payLoad: "A3" },
+	{ id: "2", payLoad: "A4" },
+	{ id: "3", payLoad: "A6" },
+	{ id: "4", payLoad: "Q5" },
+	{ id: "5", payLoad: "Q7" },
+];
+
 const Filter = () => {
-	const [selectedFilters, setSelectedFilters] = useState<SelectedFilter[]>(
-		[]
-	);
+	const [selectedFilters, setSelectedFilters] = useState<SelectedFilter[]>([]);
 
-	const vehicleTypes = [
-		{ id: "1", payLoad: "Все транспортные средства" },
-		{ id: "2", payLoad: "Легковые" },
-		{ id: "3", payLoad: "Грузовые" },
-		{ id: "4", payLoad: "Мотоциклы" },
-	];
-
-	const conditions = [
-		{ id: "1", payLoad: "Новый" },
-		{ id: "2", payLoad: "Б/У" },
-	];
-
-	const transmissions = [
-		{ id: "1", payLoad: "Механическая" },
-		{ id: "2", payLoad: "Автоматическая" },
-		{ id: "3", payLoad: "Роботизированная" },
-	];
-
-	const fuelTypes = [
-		{ id: "1", payLoad: "Бензин" },
-		{ id: "2", payLoad: "Дизель" },
-		{ id: "3", payLoad: "Электро" },
-		{ id: "4", payLoad: "Гибрид" },
-	];
-
-	const driveTypes = [
-		{ id: "1", payLoad: "Передний" },
-		{ id: "2", payLoad: "Задний" },
-		{ id: "3", payLoad: "Полный" },
-	];
-
-	const bodyTypes = [
-		{ id: "1", payLoad: "Седан" },
-		{ id: "2", payLoad: "Хэтчбек" },
-		{ id: "3", payLoad: "Универсал" },
-		{ id: "4", payLoad: "Внедорожник" },
-		{ id: "5", payLoad: "Купе" },
-		{ id: "6", payLoad: "Кабриолет" },
-		{ id: "7", payLoad: "Пикап" },
-		{ id: "8", payLoad: "Минивэн" },
-	];
-
-	const cylinders = [
-		{ id: "1", payLoad: "2" },
-		{ id: "2", payLoad: "3" },
-		{ id: "3", payLoad: "4" },
-		{ id: "4", payLoad: "5" },
-		{ id: "5", payLoad: "6" },
-		{ id: "6", payLoad: "8" },
-		{ id: "7", payLoad: "12" },
-	];
-
-	const statuses = [
-		{ id: "1", payLoad: "В продаже" },
-		{ id: "2", payLoad: "В пути" },
-		{ id: "3", payLoad: "Продано" },
-	];
-
-	const brands = [
-		{ id: "1", payLoad: "Audi" },
-		{ id: "2", payLoad: "BMW" },
-		{ id: "3", payLoad: "Mercedes-Benz" },
-		{ id: "4", payLoad: "Toyota" },
-		{ id: "5", payLoad: "Volkswagen" },
-		{ id: "6", payLoad: "Honda" },
-		{ id: "7", payLoad: "Hyundai" },
-		{ id: "8", payLoad: "Kia" },
-	];
-
-	const models = [
-		{ id: "1", payLoad: "A3" },
-		{ id: "2", payLoad: "A4" },
-		{ id: "3", payLoad: "A6" },
-		{ id: "4", payLoad: "Q5" },
-		{ id: "5", payLoad: "Q7" },
-	];
+	const getSelectedValuesForTitle = (title: string) => {
+		return selectedFilters
+			.filter(filter => filter.title === title)
+			.map(filter => filter.value);
+	};
 
 	const handleFilterSelect = (title: string, value: string) => {
 		const newFilter: SelectedFilter = {
@@ -95,18 +99,15 @@ const Filter = () => {
 			value,
 		};
 
-		// Проверяем, существует ли уже такой фильтр
 		const existingFilter = selectedFilters.find(
 			(filter) => filter.id === newFilter.id
 		);
 
 		if (existingFilter) {
-			// Если фильтр существует, удаляем его
 			setSelectedFilters((prev) =>
 				prev.filter((filter) => filter.id !== newFilter.id)
 			);
 		} else {
-			// Если фильтра нет, добавляем его
 			setSelectedFilters((prev) => [...prev, newFilter]);
 		}
 	};
@@ -122,12 +123,10 @@ const Filter = () => {
 	const handleYearRangeChange = (range: { start: string; end: string }) => {
 		const yearRangeId = `Год выпуска-${range.start}-${range.end}`;
 
-		// Удаляем старый фильтр года, если он есть
 		const filtersWithoutYear = selectedFilters.filter(
 			(filter) => !filter.id.startsWith("Год выпуска-")
 		);
 
-		// Добавляем новый фильтр года
 		setSelectedFilters([
 			...filtersWithoutYear,
 			{
@@ -159,9 +158,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Все транспортные средства"
 						selects={vehicleTypes}
-						onSelect={(value) =>
-							handleFilterSelect("Тип", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Тип", value as string)}
+						selectedValues={getSelectedValuesForTitle("Тип")}
 					/>
 				</div>
 
@@ -169,9 +167,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Состояние"
 						selects={conditions}
-						onSelect={(value) =>
-							handleFilterSelect("Состояние", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Состояние", value as string)}
+						selectedValues={getSelectedValuesForTitle("Состояние")}
 					/>
 				</div>
 
@@ -193,9 +190,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Марка"
 						selects={brands}
-						onSelect={(value) =>
-							handleFilterSelect("Марка", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Марка", value as string)}
+						selectedValues={getSelectedValuesForTitle("Марка")}
 					/>
 				</div>
 
@@ -203,9 +199,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Модель"
 						selects={models}
-						onSelect={(value) =>
-							handleFilterSelect("Модель", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Модель", value as string)}
+						selectedValues={getSelectedValuesForTitle("Модель")}
 					/>
 				</div>
 
@@ -213,9 +208,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Тип двигателя"
 						selects={fuelTypes}
-						onSelect={(value) =>
-							handleFilterSelect("Тип двигателя", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Тип двигателя", value as string)}
+						selectedValues={getSelectedValuesForTitle("Тип двигателя")}
 					/>
 				</div>
 
@@ -223,12 +217,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Передача"
 						selects={transmissions}
-						onSelect={(value) =>
-							handleFilterSelect(
-								"Коробка передач",
-								value as string
-							)
-						}
+						onSelect={(value) => handleFilterSelect("Коробка передач", value as string)}
+						selectedValues={getSelectedValuesForTitle("Коробка передач")}
 					/>
 				</div>
 
@@ -236,9 +226,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Тип топлива"
 						selects={fuelTypes}
-						onSelect={(value) =>
-							handleFilterSelect("Тип топлива", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Тип топлива", value as string)}
+						selectedValues={getSelectedValuesForTitle("Тип топлива")}
 					/>
 				</div>
 
@@ -246,9 +235,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Приводной механизм"
 						selects={driveTypes}
-						onSelect={(value) =>
-							handleFilterSelect("Привод", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Привод", value as string)}
+						selectedValues={getSelectedValuesForTitle("Привод")}
 					/>
 				</div>
 
@@ -256,9 +244,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Цилиндр"
 						selects={cylinders}
-						onSelect={(value) =>
-							handleFilterSelect("Цилиндр", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Цилиндр", value as string)}
+						selectedValues={getSelectedValuesForTitle("Цилиндр")}
 					/>
 				</div>
 
@@ -266,9 +253,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Тип кузова"
 						selects={bodyTypes}
-						onSelect={(value) =>
-							handleFilterSelect("Тип кузова", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Тип кузова", value as string)}
+						selectedValues={getSelectedValuesForTitle("Тип кузова")}
 					/>
 				</div>
 
@@ -276,9 +262,8 @@ const Filter = () => {
 					<DropDownFilter
 						title="Статус"
 						selects={statuses}
-						onSelect={(value) =>
-							handleFilterSelect("Статус", value as string)
-						}
+						onSelect={(value) => handleFilterSelect("Статус", value as string)}
+						selectedValues={getSelectedValuesForTitle("Статус")}
 					/>
 				</div>
 			</div>
