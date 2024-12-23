@@ -11,26 +11,20 @@ import settings from "./settings.json";
 const HeaderUp: FC = () => {
 	const pathToRegions = "/src/assets/img/icons/";
 
-	const selectsRegion: SelectsInterface[] = settings.regions.map(
-		(region) => ({
-			id: region.id,
-			payLoad: (
-				<img src={pathToRegions + region.payLoad} alt={region.id} />
-			),
-		})
-	);
+	const selectsRegion: SelectsInterface[] = settings.regions.map((region) => ({
+		id: region.id,
+		payLoad: <img src={pathToRegions + region.payLoad} alt={region.id} />,
+	}));
 
 	const selectsLang: SelectsInterface[] = settings.languages.map((lang) => ({
 		id: lang.id,
 		payLoad: lang.payLoad,
 	}));
 
-	const selectsCurrency: SelectsInterface[] = settings.currencies.map(
-		(currency) => ({
-			id: currency.id,
-			payLoad: currency.payLoad,
-		})
-	);
+	const selectsCurrency: SelectsInterface[] = settings.currencies.map((currency) => ({
+		id: currency.id,
+		payLoad: currency.payLoad,
+	}));
 
 	return (
 		<div className={style.headerUp}>

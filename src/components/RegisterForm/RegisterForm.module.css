@@ -1,0 +1,143 @@
+.container {
+	width: 544px;
+	background: #ffffff;
+	border-radius: 4px;
+	padding: 71px;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 48px;
+	position: relative;
+}
+
+.header h2 {
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 32px;
+	color: #333333;
+	margin: 0;
+}
+
+.closeButton {
+	position: absolute;
+	right: 24px;
+	top: 24px;
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.closeButton img {
+	width: 24px;
+	height: 24px;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+}
+
+.closeButton:hover img {
+	opacity: 1;
+}
+
+.loginBlock {
+	display: flex;
+	gap: 16px;
+	align-items: center;
+	margin-bottom: 48px;
+}
+
+.loginBlock button {
+	line-height: 28px;
+}
+
+.loginText {
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 24px;
+	color: #333333;
+	margin: 0;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.inputGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.inputGroup label {
+	font-size: 16px;
+	line-height: 20px;
+	color: #333333;
+}
+
+.inputGroup input,
+.inputGroup select {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	font-size: 16px;
+	line-height: 24px;
+	color: #333333;
+	background-color: #ffffff;
+}
+
+.inputGroup select {
+	cursor: pointer;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23333333' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	padding-right: 36px;
+}
+
+.inputGroup input:focus,
+.inputGroup select:focus {
+	outline: none;
+	border-color: #007bff;
+}
+
+.passwordInput {
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.togglePassword {
+	position: absolute;
+	right: 12px;
+	background: none;
+	border: none;
+	padding: 8px;
+	cursor: pointer;
+}
+
+.togglePassword img {
+	width: 20px;
+	height: 20px;
+	opacity: 0.6;
+	transition: opacity 0.2s;
+}
+
+.togglePassword:hover img {
+	opacity: 1;
+}
+
+.buttonContainer {
+	margin-top: 8px;
+}
+
+.error {
+	color: #dc3545;
+	font-size: 14px;
+	line-height: 20px;
+	margin-bottom: -8px;
+}

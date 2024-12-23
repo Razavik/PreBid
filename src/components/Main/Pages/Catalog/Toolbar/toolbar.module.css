@@ -1,6 +1,7 @@
 .toolbar {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 .title {
@@ -19,12 +20,20 @@
 	margin-left: 8px;
 }
 
+.viewButtons {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
 .viewButtons .button {
 	width: 24px;
 	height: 24px;
 	background-color: initial;
 	border: none;
 	cursor: pointer;
+	margin: 0;
+	padding: 0;
 }
 
 .viewButtons .button svg {
@@ -40,7 +49,7 @@
 	fill: #004dd5;
 }
 
-.toolbarView{
+.toolbarView {
 	display: flex;
 	gap: 40px;
 }

@@ -10,11 +10,16 @@ interface Props {
 	title: string;
 	selects: SelectsInterface[];
 	onSelect?: (value: ReactNode) => void;
+	selectedValues?: string[];
 }
 
-const DropDownFilter: FC<Props> = ({ title, selects, onSelect }: Props) => {
+const DropDownFilter: FC<Props> = ({
+	title,
+	selects,
+	onSelect,
+	selectedValues = [],
+}: Props) => {
 	const [isEnabled, setIsEnabled] = useState<boolean>(false);
-	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const handleClick = () => {
@@ -43,14 +48,7 @@ const DropDownFilter: FC<Props> = ({ title, selects, onSelect }: Props) => {
 
 	const styleArrowReverse = isEnabled ? style.reverse : "";
 
-	const handleSelectChange = (id: string, value: ReactNode) => {
-		const newSelectedIds = new Set(selectedIds);
-		if (newSelectedIds.has(id)) {
-			newSelectedIds.delete(id);
-		} else {
-			newSelectedIds.add(id);
-		}
-		setSelectedIds(newSelectedIds);
+	const handleSelectChange = (value: ReactNode) => {
 		onSelect?.(value);
 	};
 
@@ -82,12 +80,11 @@ const DropDownFilter: FC<Props> = ({ title, selects, onSelect }: Props) => {
 						<label key={select.id} className={style.checkboxLabel}>
 							<input
 								type="checkbox"
-								checked={selectedIds.has(select.id)}
+								checked={selectedValues.includes(
+									select.payLoad as string
+								)}
 								onChange={() =>
-									handleSelectChange(
-										select.id,
-										select.payLoad
-									)
+									handleSelectChange(select.payLoad)
 								}
 							/>
 							<span className={style.checkboxText}>

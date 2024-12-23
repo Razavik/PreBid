@@ -1,4 +1,4 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, MouseEvent } from "react";
 import classNames from "classnames"; // Рекомендуется использовать эту библиотеку для управления классами
 import classes from "./button.module.css";
 
@@ -16,7 +16,8 @@ interface Props {
 		leftRight: number;
 	};
 	disabled?: boolean;
-	onClick?: () => void;
+	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+	type?: "button" | "submit" | "reset";
 }
 
 const Button: FC<Props> = ({
@@ -26,6 +27,7 @@ const Button: FC<Props> = ({
 	paddingStyle,
 	disabled = false,
 	onClick,
+	type = "button",
 }) => {
 	const buttonClass = classNames(classes.button, classes[colorButton], {
 		[classes.largeButton]: isLarge,
@@ -41,6 +43,7 @@ const Button: FC<Props> = ({
 			onClick={onClick}
 			className={buttonClass}
 			disabled={disabled}
+			type={type}
 		>
 			{children}
 		</button>
