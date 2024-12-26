@@ -15,7 +15,6 @@ interface HeaderDownProps {
 
 const HeaderDown: FC<HeaderDownProps> = ({ onLoginClick }) => {
 	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-	const user = useSelector((state: RootState) => state.user.info);
 
 	const menuItems: MenuItems = {
 		items: [
