@@ -19,7 +19,7 @@ const HeaderDown: FC<HeaderDownProps> = ({ onLoginClick }) => {
 	const menuItems: MenuItems = {
 		items: [
 			{ id: "catalog", content: "Каталог", path: "/" },
-			{ id: "auctions", content: "Аукционы", path: "/auctions" },
+			{ id: "auctions", content: "Аукционы", path: "/auctions", protected: true },
 			{ id: "tariffs", content: "Тарифы", path: "/tariffs" },
 			{
 				id: "how-it-works",

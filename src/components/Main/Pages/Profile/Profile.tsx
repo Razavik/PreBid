@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import styles from "./Profile.module.css";
 
-export const Profile: FC = () => {
+const Profile: FC = () => {
 	const { info: user, isLoading } = useSelector((state: RootState) => state.user);
 
 	if (isLoading) {
@@ -51,3 +51,5 @@ export const Profile: FC = () => {
 		</div>
 	);
 };
+
+export default Profile;
