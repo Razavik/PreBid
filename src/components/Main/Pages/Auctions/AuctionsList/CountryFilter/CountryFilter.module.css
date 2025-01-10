@@ -1,0 +1,26 @@
+.countryFilter {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 2rem;
+}
+
+.countryButton {
+	padding: 12px 20px;
+	border-radius: 20px;
+	border: none;
+	background: #edeff3;
+	cursor: pointer;
+	color: #6b7a99;
+	transition: all 0.2s ease;
+	font-family: Circe;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 20px;
+	text-align: center;
+}
+.countryButton.active {
+	background: white;
+	color: #004dd5;
+	border: 1px #004dd5 solid;
+}

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@store/index";
+import { RootState } from "@store/store";
 import style from "./headerdown.module.css";
 import Container from "@ui/Container/Container";
 import Nav, { MenuItems } from "./Navigation/Nav";

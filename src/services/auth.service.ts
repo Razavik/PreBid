@@ -1,8 +1,8 @@
 import axiosInstance from './axios.config';
 import { setJwtToken, removeJwtToken, getJwtToken } from '@utils/jwt';
-import { store } from '../store';
-import { setAuthenticated } from "@store/slices/authSlice";
-import { setUserInfo } from "@store/slices/userSlice";
+import { store } from '../store/store';
+import { setAuth, setRole, clearAuth } from "@store/slices/authSlice";
+import { setUserInfo, clearUserInfo } from "@store/slices/userSlice";
 
 interface LoginData {
     username: string;
@@ -37,8 +37,6 @@ export const authService = {
                 client_secret: CLIENT_SECRET
             };
 
-            console.log('Отправляемые данные:', requestData);
-
             const response = await axiosInstance.post(`${API_URL}/user/login`, requestData);
 
             if (response.data.access_token) {
@@ -46,11 +44,13 @@ export const authService = {
 
                 // Получаем данные пользователя
                 const userInfo = await this.getUserInfo();
+
                 if (userInfo) {
-                    store.dispatch(setUserInfo(userInfo));
-                    localStorage.setItem("user_info", JSON.stringify(userInfo));
-                    // Устанавливаем isAuthenticated только после получения данных
-                    store.dispatch(setAuthenticated(true));
+                    store.dispatch(setUserInfo(userInfo.client));
+                    if (userInfo.role) {
+                        store.dispatch(setRole(userInfo.role));
+                    }
+                    store.dispatch(setAuth(true));
                 }
             }
 
@@ -74,7 +74,7 @@ export const authService = {
                     store.dispatch(setUserInfo(userInfo));
                     localStorage.setItem("user_info", JSON.stringify(userInfo));
                     // Устанавливаем isAuthenticated только после получения данных
-                    store.dispatch(setAuthenticated(true));
+                    store.dispatch(setAuth(true));
                 }
             }
 
@@ -88,8 +88,8 @@ export const authService = {
     async logout() {
         // Очищаем все локальные данные
         removeJwtToken();
-        store.dispatch(setAuthenticated(false));
-        store.dispatch(setUserInfo(null));
+        store.dispatch(clearAuth());
+        store.dispatch(clearUserInfo());
         localStorage.removeItem("user_info");
     },
 
@@ -106,23 +106,27 @@ export const authService = {
                 // Проверяем кэшированные данные
                 const cachedUser = localStorage.getItem("user_info");
                 if (cachedUser) {
-                    store.dispatch(setUserInfo(JSON.parse(cachedUser)));
-                    // Устанавливаем isAuthenticated только если есть кэшированные данные
-                    store.dispatch(setAuthenticated(true));
+                    const userData = JSON.parse(cachedUser);
+                    store.dispatch(setUserInfo(userData));
+                    if (userData.role) {
+                        store.dispatch(setRole(userData.role));
+                    }
+                    store.dispatch(setAuth(true));
                 }
 
                 // Обновляем данные с сервера
                 const response = await this.getUserInfo();
                 if (response) {
                     store.dispatch(setUserInfo(response));
+                    if (response.role) {
+                        store.dispatch(setRole(response.role));
+                    }
                     localStorage.setItem("user_info", JSON.stringify(response));
-                    store.dispatch(setAuthenticated(true));
+                    store.dispatch(setAuth(true));
                 } else {
-                    // Если не удалось получить данные с сервера
                     this.logout();
                 }
             } else {
-                // Если нет токена
                 this.logout();
             }
         } catch (error) {
@@ -134,7 +138,11 @@ export const authService = {
     async getUserInfo() {
         try {
             const response = await axiosInstance.get(`${API_URL}/user/information`);
-            return response.data.client;
+            const userData = {
+                ...response.data,
+                role: response.data.role || null
+            };
+            return userData;
         } catch (error: any) {
             console.error('Ошибка при получении данных пользователя:', error);
             throw error;

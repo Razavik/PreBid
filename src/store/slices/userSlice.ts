@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface Client {
+    name_ru: string;
+    second_name_ru: string | null;
+    code: number;
+}
+
 interface UserState {
-    info: any | null;
+    info: Client | null;
     isLoading: boolean;
     error: string | null;
 }
@@ -16,8 +22,12 @@ const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setUserInfo: (state, action: PayloadAction<any>) => {
+        setUserInfo: (state, action: PayloadAction<Client>) => {
             state.info = action.payload;
+            state.error = null;
+        },
+        clearUserInfo: (state) => {
+            state.info = null;
             state.error = null;
         },
         setLoading: (state, action: PayloadAction<boolean>) => {
@@ -30,5 +40,5 @@ const userSlice = createSlice({
     }
 });
 
-export const { setUserInfo, setLoading, setError } = userSlice.actions;
+export const { setUserInfo, clearUserInfo, setLoading, setError } = userSlice.actions;
 export default userSlice.reducer;

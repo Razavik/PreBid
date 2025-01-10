@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@store/index";
+import { RootState } from "@store/store";
 import Container from "@ui/Container/Container";
 import style from "./unregblock.module.css";
 import Button, { ColorButton } from "@ui/Button/Button";

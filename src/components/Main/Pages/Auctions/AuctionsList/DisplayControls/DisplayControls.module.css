@@ -1,0 +1,32 @@
+.displayControls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #6b7a99;
+	font-family: Circe;
+	font-size: 16px;
+}
+
+.displayControls span {
+	color: black;
+}
+
+.select {
+	padding: 8px;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	background-color: #fff;
+	color: #6b7a99;
+	font-family: Circe;
+	font-size: 16px;
+	cursor: pointer;
+	outline: none;
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	padding-right: 32px;
+	min-width: 80px;
+}
+
+.select:focus {
+	border-color: #004dd5;
+}

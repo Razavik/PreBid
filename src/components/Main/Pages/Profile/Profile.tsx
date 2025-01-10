@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@store/index";
+import { RootState } from "@store/store";
 import styles from "./Profile.module.css";
 
 const Profile: FC = () => {
@@ -29,22 +29,6 @@ const Profile: FC = () => {
 							<span className={styles.label}>ФИО:</span>
 							<span className={styles.value}>{fullName}</span>
 						</div>
-						<div className={styles.field}>
-							<span className={styles.label}>Телефон:</span>
-							<span className={styles.value}>{user.phone}</span>
-						</div>
-						{user.company_name && (
-							<div className={styles.field}>
-								<span className={styles.label}>Компания:</span>
-								<span className={styles.value}>{user.company_name}</span>
-							</div>
-						)}
-						{user.telegram && (
-							<div className={styles.field}>
-								<span className={styles.label}>Telegram:</span>
-								<span className={styles.value}>{user.telegram}</span>
-							</div>
-						)}
 					</div>
 				</div>
 			</div>

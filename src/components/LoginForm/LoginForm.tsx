@@ -1,14 +1,11 @@
-import { FC, useState, FormEvent } from "react";
+import { FC, useState } from "react";
 import styles from "./LoginForm.module.css";
 import Button, { ColorButton } from "@ui/Button/Button";
 import closeIcon from "@assets/img/icons/closeButton.svg";
 import { authService } from "@services/auth.service";
 import Modal from "@ui/Modal/Modal";
-import { useAsync } from "../../hooks/useAsync";
 import { Input } from "@ui/inputs/Input/Input";
 import { PasswordInput } from "@ui/inputs/PasswordInput/PasswordInput";
-import { useDispatch } from "react-redux";
-import { setUserInfo } from "@store/slices/userSlice";
 
 interface LoginFormProps {
 	isOpen: boolean;
@@ -19,25 +16,24 @@ interface LoginFormProps {
 export const LoginForm: FC<LoginFormProps> = ({ isOpen, onClose, onRegisterClick }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const dispatch = useDispatch();
-	
-	const {
-		execute: handleLogin,
-		isLoading,
-		error,
-	} = useAsync(async () => {
-		await authService.login({
-			username: email,
-			password: password,
-		});
-		const userInfo = await authService.getUserInfo();
-		dispatch(setUserInfo(userInfo));
-		onClose();
-	});
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
 
-	const handleSubmit = async (e: FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		await handleLogin();
+		setIsLoading(true);
+
+		try {
+			await authService.login({
+				username: email,
+				password: password,
+			});
+			onClose();
+		} catch (error) {
+			setError("Неверный email или пароль");
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	const handleRegisterClick = () => {
@@ -68,7 +64,7 @@ export const LoginForm: FC<LoginFormProps> = ({ isOpen, onClose, onRegisterClick
 				<form className={styles.form} onSubmit={handleSubmit}>
 					{error && <div className={styles.error}>{error}</div>}
 					<Input
-						type="email"
+						type="text"
 						id="email"
 						name="email"
 						label="Электронная почта"
@@ -76,11 +72,7 @@ export const LoginForm: FC<LoginFormProps> = ({ isOpen, onClose, onRegisterClick
 						onChange={(e) => setEmail(e.target.value)}
 						required
 					/>
-					<PasswordInput
-						value={password}
-						onChange={setPassword}
-						required
-					/>
+					<PasswordInput value={password} onChange={setPassword} required />
 					<div className={styles.buttonSeparator}>
 						<Button colorButton={ColorButton.BLUE} disabled={isLoading} type="submit">
 							{isLoading ? "Вход..." : "Войти в аккаунт"}
