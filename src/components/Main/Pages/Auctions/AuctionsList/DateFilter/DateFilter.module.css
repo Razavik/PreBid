@@ -30,6 +30,10 @@
 	border-color: #2196f3;
 }
 
+.dateInput.error {
+	border-color: #f44336;
+}
+
 /* Стили для календаря */
 :global(.react-datepicker) {
 	font-family: inherit;

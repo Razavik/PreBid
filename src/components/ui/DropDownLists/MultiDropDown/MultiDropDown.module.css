@@ -1,0 +1,126 @@
+.dropDown {
+    position: relative;
+    width: 100%;
+}
+
+.dropDownMenu {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.3s ease;
+    gap: 8px;
+}
+
+.selectedItems {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    background: #2196f3;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+    padding: 0 8px;
+    margin-right: 8px;
+}
+
+.dropDownList {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    max-height: 0;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.show {
+    max-height: 200px;
+    opacity: 1;
+    visibility: visible;
+}
+
+.dropDownItem {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.dropDownItem:hover {
+    background-color: #f5f5f5;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkmark {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 3px;
+    position: relative;
+}
+
+.checkbox:checked + .checkmark {
+    background-color: #2196f3;
+    border-color: #2196f3;
+}
+
+.checkbox:checked + .checkmark::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 3px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.reverse {
+    transform: rotate(180deg);
+}
+
+/* Стилизация скроллбара */
+.dropDownList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropDownList::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.dropDownList::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.dropDownList::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

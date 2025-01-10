@@ -54,7 +54,7 @@ export const DateFilter: FC<DateFilterProps> = ({
 					open={isOpen}
 					onClickOutside={onClose}
 					shouldCloseOnSelect={false}
-					customInput={<input value={formatDateRange()} onClick={onToggle} />}
+					customInput={<input value={formatDateRange()} onClick={onToggle} readOnly />}
 				/>
 			</div>
 		</div>

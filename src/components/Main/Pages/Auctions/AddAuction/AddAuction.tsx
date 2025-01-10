@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import styles from "./AddAuction.module.css";
 import DatePicker from "react-datepicker";
 import { ru } from "date-fns/locale/ru";
+import MultiDropDown from "@ui/DropDownLists/MultiDropDown/MultiDropDown";
 
 interface AddAuctionProps {
 	countries: Array<{
@@ -15,7 +16,7 @@ export const AddAuction: FC<AddAuctionProps> = ({ countries }) => {
 	const [formData, setFormData] = useState({
 		name: "",
 		type: "open",
-		country: "",
+		countries: [] as number[],
 		startDate: new Date(),
 		countdownTime: 0,
 	});
@@ -24,6 +25,27 @@ export const AddAuction: FC<AddAuctionProps> = ({ countries }) => {
 		e.preventDefault();
 		// TODO: Добавить логику отправки данных
 		console.log("Form data:", formData);
+	};
+
+	const countryOptions = countries.map((country) => ({
+		id: country.id.toString(),
+		payLoad: country.name_ru,
+	}));
+
+	const handleCountrySelect = (selectedCountries: string[]) => {
+		setFormData((prev) => ({
+			...prev,
+			countries: selectedCountries.map(id => parseInt(id)),
+		}));
+	};
+
+	// Стили для компонента MultiDropDown
+	const dropDownStyles = {
+		padding: "12px",
+		border: "1px solid #e0e0e0",
+		borderRadius: "4px",
+		width: "100%",
+		justifyContent: "space-between",
 	};
 
 	return (
@@ -72,20 +94,13 @@ export const AddAuction: FC<AddAuctionProps> = ({ countries }) => {
 				</div>
 
 				<div className={styles.formGroup}>
-					<label>Страна</label>
-					<select
-						value={formData.country}
-						onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-						className={styles.select}
-						required
-					>
-						<option value="">Выберите страну</option>
-						{countries.map((country) => (
-							<option key={country.id} value={country.short_name_ru}>
-								{country.name_ru}
-							</option>
-						))}
-					</select>
+					<label>Страны</label>
+					<MultiDropDown
+						title="Выберите страны"
+						selects={countryOptions}
+						onSelect={handleCountrySelect}
+						styleAddition={dropDownStyles}
+					/>
 				</div>
 
 				<div className={styles.formGroup}>
