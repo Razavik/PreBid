@@ -136,5 +136,22 @@ export const authService = {
             console.error('Ошибка при получении данных пользователя:', error);
             throw error;
         }
+    },
+
+    async refreshToken(): Promise<string | null> {
+        try {
+            const response = await axiosInstance.post(`${API_URL}/user/refresh-token`);
+
+            if (response.data.access_token) {
+                const newToken = response.data.access_token;
+                setJwtToken(newToken);
+                return newToken;
+            }
+
+            return null;
+        } catch (error: any) {
+            console.error("Refresh token error:", error);
+            return null;
+        }
     }
 };

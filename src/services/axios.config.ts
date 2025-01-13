@@ -1,34 +1,23 @@
 import axios from 'axios';
+import { authService } from './auth.service';
 import { store } from '@store/store';
 import { clearAuth, setShowLogoutModal } from '@store/slices/authSlice';
 import { clearUserInfo } from '@store/slices/userSlice';
 import { startLoading, stopLoading } from '@store/slices/loadingSlice';
 
 const axiosInstance = axios.create({
+    baseURL: 'https://autoru.neonface.by/api/v2',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     }
 });
 
-let isRefreshing = false;
-let failedQueue: any[] = [];
-
-const processQueue = (error: any = null) => {
-    failedQueue.forEach(prom => {
-        if (error) {
-            prom.reject(error);
-        } else {
-            prom.resolve();
-        }
-    });
-    failedQueue = [];
-};
-
+// Добавляем токен к каждому запросу
 axiosInstance.interceptors.request.use(
     (config) => {
         store.dispatch(startLoading());
-        const token = localStorage.getItem('token');
+        const token = authService.getToken();
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -40,6 +29,7 @@ axiosInstance.interceptors.request.use(
     }
 );
 
+// Обрабатываем ответы и ошибки
 axiosInstance.interceptors.response.use(
     (response) => {
         store.dispatch(stopLoading());
@@ -47,40 +37,39 @@ axiosInstance.interceptors.response.use(
     },
     async (error) => {
         store.dispatch(stopLoading());
+        const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !error.config._retry) {
-            if (isRefreshing) {
-                try {
-                    await new Promise((resolve, reject) => {
-                        failedQueue.push({ resolve, reject });
-                    });
-                    return axiosInstance(error.config);
-                } catch (err) {
-                    return Promise.reject(err);
-                }
-            }
-
-            isRefreshing = true;
-            error.config._retry = true;
+        // Если ошибка 401 (Unauthorized) и это не повторный запрос
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
 
             try {
-                // Здесь можно добавить логику обновления токена, если она будет
-                processQueue();
-                return axiosInstance(error.config);
+                // Пробуем обновить токен
+                const newToken = await authService.refreshToken();
+                
+                if (newToken) {
+                    // Если получили новый токен, повторяем исходный запрос
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    return axiosInstance(originalRequest);
+                } else {
+                    // Если не удалось обновить токен, выходим из системы
+                    store.dispatch(setShowLogoutModal(true));
+                    store.dispatch(clearAuth());
+                    store.dispatch(clearUserInfo());
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user_info');
+                }
             } catch (refreshError) {
-                processQueue(refreshError);
-                // Показываем модальное окно о разлогине
+                // В случае ошибки обновления токена, выходим из системы
                 store.dispatch(setShowLogoutModal(true));
-                // Очищаем данные
                 store.dispatch(clearAuth());
                 store.dispatch(clearUserInfo());
                 localStorage.removeItem('token');
                 localStorage.removeItem('user_info');
                 return Promise.reject(refreshError);
-            } finally {
-                isRefreshing = false;
             }
         }
+
         return Promise.reject(error);
     }
 );
