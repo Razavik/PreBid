@@ -1,7 +1,12 @@
-.auctionsPage {
+.auctions {
 	width: 100%;
 	display: flex;
 	margin: 40px 0;
 	gap: 32px;
 	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.content {
+	width: 100%;
 }

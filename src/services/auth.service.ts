@@ -73,7 +73,6 @@ export const authService = {
                 if (userInfo) {
                     store.dispatch(setUserInfo(userInfo));
                     localStorage.setItem("user_info", JSON.stringify(userInfo));
-                    // Устанавливаем isAuthenticated только после получения данных
                     store.dispatch(setAuth(true));
                 }
             }
@@ -86,11 +85,16 @@ export const authService = {
     },
 
     async logout() {
-        // Очищаем все локальные данные
-        removeJwtToken();
-        store.dispatch(clearAuth());
-        store.dispatch(clearUserInfo());
-        localStorage.removeItem("user_info");
+        try {
+            await axiosInstance.post(`${API_URL}/user/logout`);
+        } catch (error: any) {
+            console.error('Ошибка при выходе из системы:', error.response?.data || error.message);
+        } finally {
+            removeJwtToken();
+            store.dispatch(clearAuth());
+            store.dispatch(clearUserInfo());
+            localStorage.removeItem("user_info");
+        }
     },
 
     getToken() {
@@ -98,36 +102,21 @@ export const authService = {
     },
 
     async checkAuth() {
+        const token = getJwtToken();
+        if (!token) {
+            this.logout();
+            return;
+        }
+
         try {
-            const token = getJwtToken();
-            if (token) {
-                setJwtToken(token);
-
-                // Проверяем кэшированные данные
-                const cachedUser = localStorage.getItem("user_info");
-                if (cachedUser) {
-                    const userData = JSON.parse(cachedUser);
-                    store.dispatch(setUserInfo(userData));
-                    if (userData.role) {
-                        store.dispatch(setRole(userData.role));
-                    }
-                    store.dispatch(setAuth(true));
+            const userInfo = await this.getUserInfo();
+            if (userInfo) {
+                store.dispatch(setUserInfo(userInfo));
+                if (userInfo.role) {
+                    store.dispatch(setRole(userInfo.role));
                 }
-
-                // Обновляем данные с сервера
-                const response = await this.getUserInfo();
-                if (response) {
-                    store.dispatch(setUserInfo(response));
-                    if (response.role) {
-                        store.dispatch(setRole(response.role));
-                    }
-                    localStorage.setItem("user_info", JSON.stringify(response));
-                    store.dispatch(setAuth(true));
-                } else {
-                    this.logout();
-                }
-            } else {
-                this.logout();
+                store.dispatch(setAuth(true));
+                localStorage.setItem("user_info", JSON.stringify(userInfo));
             }
         } catch (error) {
             console.error('Ошибка при проверке авторизации:', error);

@@ -5,23 +5,31 @@ import Profile from "@components/Main/Pages/Profile/Profile";
 import Catalog from "@components/Main/Pages/Catalog/Catalog";
 import Auctions from "@components/Main/Pages/Auctions/Auctions";
 import ProductProvider from "@context/ProductContext";
+import ProtectedRoute from "@components/ProtectedRoute";
 
 export const AppRoutes = () => {
-    return (
-        <Routes>
-            <Route path="/" element={<Main />}>
-                <Route index element={<Catalog />} />
-                <Route
-                    path="product/:lotNumber"
-                    element={
-                        <ProductProvider>
-                            <Product />
-                        </ProductProvider>
-                    }
-                />
-                <Route path="profile" element={<Profile />} />
-                <Route path="auctions" element={<Auctions />} />
-            </Route>
-        </Routes>
-    );
+	return (
+		<Routes>
+			<Route path="/" element={<Main />}>
+				<Route index element={<Catalog />} />
+				<Route
+					path="product/:lotNumber"
+					element={
+						<ProductProvider>
+							<Product />
+						</ProductProvider>
+					}
+				/>
+				<Route path="profile" element={<Profile />} />
+				<Route
+					path="auctions"
+					element={
+						<ProtectedRoute>
+							<Auctions />
+						</ProtectedRoute>
+					}
+				/>
+			</Route>
+		</Routes>
+	);
 };

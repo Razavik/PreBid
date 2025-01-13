@@ -19,6 +19,7 @@
 	line-height: 20px;
 	text-align: center;
 }
+
 .countryButton.active {
 	background: white;
 	color: #004dd5;

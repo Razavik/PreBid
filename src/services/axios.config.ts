@@ -1,54 +1,85 @@
 import axios from 'axios';
-import { getJwtToken } from '@utils/jwt';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { store } from '@store/store';
+import { clearAuth, setShowLogoutModal } from '@store/slices/authSlice';
+import { clearUserInfo } from '@store/slices/userSlice';
+import { startLoading, stopLoading } from '@store/slices/loadingSlice';
 
 const axiosInstance = axios.create({
-    baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-    },
+    }
 });
 
-// Добавляем токен к каждому запросу
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any = null) => {
+    failedQueue.forEach(prom => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve();
+        }
+    });
+    failedQueue = [];
+};
+
 axiosInstance.interceptors.request.use(
     (config) => {
-        const token = getJwtToken();
+        store.dispatch(startLoading());
+        const token = localStorage.getItem('token');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-        console.log('Отправляем запрос:', {
-            url: config.url,
-            method: config.method,
-            headers: config.headers,
-            data: config.data
-        });
         return config;
     },
     (error) => {
-        console.error('Ошибка при отправке запроса:', error);
+        store.dispatch(stopLoading());
         return Promise.reject(error);
     }
 );
 
-// Обрабатываем ошибки ответа
 axiosInstance.interceptors.response.use(
     (response) => {
-        console.log('Получен ответ:', {
-            status: response.status,
-            data: response.data
-        });
+        store.dispatch(stopLoading());
         return response;
     },
-    (error) => {
-        console.error('Ошибка ответа:', {
-            status: error.response?.status,
-            data: error.response?.data,
-            message: error.message
-        });
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
+    async (error) => {
+        store.dispatch(stopLoading());
+
+        if (error.response?.status === 401 && !error.config._retry) {
+            if (isRefreshing) {
+                try {
+                    await new Promise((resolve, reject) => {
+                        failedQueue.push({ resolve, reject });
+                    });
+                    return axiosInstance(error.config);
+                } catch (err) {
+                    return Promise.reject(err);
+                }
+            }
+
+            isRefreshing = true;
+            error.config._retry = true;
+
+            try {
+                // Здесь можно добавить логику обновления токена, если она будет
+                processQueue();
+                return axiosInstance(error.config);
+            } catch (refreshError) {
+                processQueue(refreshError);
+                // Показываем модальное окно о разлогине
+                store.dispatch(setShowLogoutModal(true));
+                // Очищаем данные
+                store.dispatch(clearAuth());
+                store.dispatch(clearUserInfo());
+                localStorage.removeItem('token');
+                localStorage.removeItem('user_info');
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
+            }
         }
         return Promise.reject(error);
     }
