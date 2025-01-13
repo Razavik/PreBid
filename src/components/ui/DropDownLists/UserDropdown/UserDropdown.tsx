@@ -26,8 +26,7 @@ export const UserDropdown: FC = () => {
 
 	if (!user) return null;
 
-	const fullName =
-		[user.name_ru, user.second_name_ru].filter(Boolean).join(" ") || "Пользователь";
+	const fullName = [user.name_ru, user.second_name_ru].filter(Boolean).join(" ") || "Админ";
 
 	return (
 		<div className={styles.dropdown} ref={dropdownRef}>
