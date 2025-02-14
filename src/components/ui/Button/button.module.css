@@ -6,10 +6,17 @@
 	font-family: Circe;
 	font-size: 16px;
 	font-weight: 700;
-	line-height: 24px;
 	text-align: center;
 	cursor: pointer;
 	text-wrap: nowrap;
+	display: inline-flex !important;
+	align-items: center;
+	gap: 8px;
+}
+
+.button.fullWidthButton {
+	width: 100%;
+	justify-content: center;
 }
 
 .button.greenButton {
@@ -35,6 +42,8 @@
 }
 
 .button:disabled {
-	background: #d3d8e6;
+	background: #ffffff;
+	color: #6b7a99;
+	border: 1px solid #6b7a99;
 	cursor: default;
 }

@@ -1,0 +1,22 @@
+.selectedFilter {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	border: 1px solid #6b7a99;
+	padding: 7px 8px;
+	border-radius: 100px;
+	text-wrap: nowrap;
+}
+
+.filterText {
+	color: #6b7a99;
+}
+
+.removeButton {
+	cursor: pointer;
+	background: none;
+	border: none;
+	font-size: 0;
+	width: 16px;
+	height: 16px;
+}

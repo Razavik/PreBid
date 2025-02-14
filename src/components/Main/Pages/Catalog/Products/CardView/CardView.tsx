@@ -1,86 +1,43 @@
-import { FC } from "react";
-import { Data } from "../Products";
+import { FC, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@store/store";
+import { Transport } from "types/catalog.types";
 import style from "./cardview.module.css";
-import Button, { ColorButton } from "@components/ui/Button/Button";
-import BookmarkButton from "@components/ui/BookmarkButton/BookmarkButton";
-import ImageSlider from "@components/ui/ImageSlider/ImageSlider";
-import { Link } from "react-router-dom";
+import Card from "./Card/Card";
 
 interface Props {
-	data: Data;
-	setCountProducts: (count: number) => void;
+	products: Transport[];
+	isAuthenticated: boolean;
+	onBid: (currentPrice: number, auctionId: number, transportId: number) => void;
 }
 
-const CardView: FC<Props> = ({ data, setCountProducts }) => {
-	setCountProducts(data.products.length);
+const CardView: FC<Props> = ({ products, isAuthenticated, onBid }) => {
+	const [userId, setUserId] = useState<number | null>(null);
+	const user = useSelector((state: RootState) => state.user.info);
 
-	const paddingStyle = {
-		topBottom: 12,
-		leftRight: 32,
-	};
+	useEffect(() => {
+		const fetchId = async () => {
+			try {
+				if (isAuthenticated && user) {
+					setUserId(user.id);
+				}
+			} catch (error) {
+				console.error("Ошибка при получении email:", error);
+			}
+		};
+		fetchId();
+	}, [isAuthenticated, user]);
 
 	return (
 		<div className={style.cardView}>
-			{data.products.map((product, index) => (
-				<div key={"card-" + index} className={style.card}>
-					<div className={style.photoContainer}>
-						<BookmarkButton
-							productId={product.lotNumber}
-							onToggle={(id, state) => {
-								console.log(
-									`Product ${id} bookmark state: ${state}`
-								);
-							}}
-						/>
-						<ImageSlider
-							images={product.photos.map(
-								(photo) => `${data.path}${photo}`
-							)}
-							alt={`${product.brand} ${product.model}`}
-						/>
-					</div>
-
-					<div className={style.details}>
-						<h3>
-							{product.year} {product.brand} {product.model}
-						</h3>
-						<p>
-							<span>Номер лота</span>
-							<Link to={`/product/${product.lotNumber}`}>
-								{product.lotNumber}
-							</Link>
-						</p>
-						<p>
-							<span>Дата аукциона</span>
-							<span>{product.datetime.date}</span>
-						</p>
-						<p>
-							<span>Объем двигателя</span>
-							<span>{product.engineVolume}</span>
-						</p>
-						<p>
-							<span>Тип топлива</span>
-							<span>{product.fuelType}</span>
-						</p>
-						<p>
-							<span>Одометр</span> <span>{product.mileage}</span>
-						</p>
-						<div>
-							<p>
-								<span>Текущая ставка</span>
-								<span>${product.buyNowPrice}</span>
-							</p>
-							<Button
-								colorButton={ColorButton.BLUE}
-								paddingStyle={paddingStyle}
-								disabled={Boolean(product.disabled)}
-							>
-								Сделать ставку
-							</Button>
-						</div>
-						<a href="#">Купить сейчас за {product.buyNowPrice}$</a>
-					</div>
-				</div>
+			{products.map((product) => (
+				<Card
+					key={product.general.id}
+					product={product}
+					isAuthenticated={isAuthenticated}
+					userId={userId}
+					onBid={onBid}
+				/>
 			))}
 		</div>
 	);

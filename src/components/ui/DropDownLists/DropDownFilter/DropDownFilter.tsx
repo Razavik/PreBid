@@ -1,99 +1,145 @@
 import { ReactNode, useState, useRef, useEffect, FC } from "react";
 import style from "./dropDownFilter.module.css";
+import SelectedFilter from "./SelectedFilter/SelectedFilter";
 
 export interface SelectsInterface {
-	id: string;
+	id: number;
 	payLoad: ReactNode | string;
 }
 
 interface Props {
-	title: string;
+	label: string;
 	selects: SelectsInterface[];
-	onSelect?: (value: ReactNode) => void;
-	selectedValues?: string[];
+	onChange?: (value: SelectsInterface | SelectsInterface[] | null) => void;
+	isMulti?: boolean;
+	value?: SelectsInterface | SelectsInterface[] | null;
 }
 
-const DropDownFilter: FC<Props> = ({
-	title,
-	selects,
-	onSelect,
-	selectedValues = [],
-}: Props) => {
-	const [isEnabled, setIsEnabled] = useState<boolean>(false);
+const DropDownFilter: FC<Props> = ({ label, selects, onChange, isMulti = false, value }) => {
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const [selectedItems, setSelectedItems] = useState<SelectsInterface[]>(
+		Array.isArray(value) ? value : value ? [value] : []
+	);
+
+	useEffect(() => {
+		if (value === null) {
+			setSelectedItems([]);
+		} else if (value) {
+			setSelectedItems(Array.isArray(value) ? value : [value]);
+		}
+	}, [value]);
 
 	const handleClick = () => {
-		setIsEnabled(!isEnabled);
+		setIsOpen(!isOpen);
 	};
 
 	const handleOutsideClick = (event: MouseEvent) => {
-		if (
-			dropdownRef.current &&
-			!dropdownRef.current.contains(event.target as Node)
-		) {
-			setIsEnabled(false);
+		if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+			setIsOpen(false);
 		}
 	};
 
 	useEffect(() => {
-		window.addEventListener("click", handleOutsideClick);
+		document.addEventListener("mousedown", handleOutsideClick);
 		return () => {
-			window.removeEventListener("click", handleOutsideClick);
+			document.removeEventListener("mousedown", handleOutsideClick);
 		};
 	}, []);
 
-	const styleDropDownList = `${style.dropDownList} ${
-		isEnabled ? style.show : ""
-	}`.trim();
+	const handleSelectChange = (select: SelectsInterface) => {
+		let newSelectedItems: SelectsInterface[];
 
-	const styleArrowReverse = isEnabled ? style.reverse : "";
+		if (isMulti) {
+			const itemIndex = selectedItems.findIndex((item) => item.id === select.id);
+			if (itemIndex === -1) {
+				newSelectedItems = [...selectedItems, select];
+			} else {
+				newSelectedItems = selectedItems.filter((item) => item.id !== select.id);
+			}
+		} else {
+			newSelectedItems = [select];
+			setIsOpen(false);
+		}
 
-	const handleSelectChange = (value: ReactNode) => {
-		onSelect?.(value);
+		setSelectedItems(newSelectedItems);
+
+		if (onChange) {
+			onChange(
+				isMulti
+					? newSelectedItems
+					: newSelectedItems.length > 0
+					? newSelectedItems[0]
+					: null
+			);
+		}
+	};
+
+	const handleRemove = (selectId: number) => {
+		const newSelectedItems = selectedItems.filter((item) => item.id !== selectId);
+		setSelectedItems(newSelectedItems);
+
+		if (onChange) {
+			onChange(isMulti ? newSelectedItems : null);
+		}
 	};
 
 	return (
-		<div className={style.dropDown} ref={dropdownRef}>
-			<div className={style.dropDownMenu} onClick={handleClick}>
-				<span className={style.title}>{title}</span>
-				<svg
-					className={styleArrowReverse}
-					width="14"
-					height="7"
-					viewBox="0 0 15 8"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<path
-						fill-rule="evenodd"
-						clip-rule="evenodd"
-						d="M0.195312 0.475586L7.19531 7.47559L14.1953 0.475586H0.195312Z"
-						fill="#6B7A99"
-					/>
-				</svg>
-
-				<div
-					className={styleDropDownList}
-					onClick={(e) => e.stopPropagation()}
-				>
-					{selects.map((select) => (
-						<label key={select.id} className={style.checkboxLabel}>
-							<input
-								type="checkbox"
-								checked={selectedValues.includes(
-									select.payLoad as string
-								)}
-								onChange={() =>
-									handleSelectChange(select.payLoad)
-								}
+		<div className={style.dropDownFilter} ref={dropdownRef}>
+			<div className={style.dropDownHeader} onClick={handleClick}>
+				<div className={style.text}>
+					<span>
+						{isMulti
+							? label
+							: selectedItems[0]?.payLoad
+							? selectedItems[0].payLoad
+							: label}
+					</span>
+					{selectedItems &&
+						isMulti &&
+						selectedItems.map((item) => (
+							<SelectedFilter
+								key={item.id}
+								text={item.payLoad as string}
+								onRemove={() => handleRemove(item.id)}
 							/>
-							<span className={style.checkboxText}>
-								{select.payLoad}
-							</span>
-						</label>
-					))}
+						))}
+				</div>
+				<div className={`${style.arrow} ${isOpen ? style.reverse : ""}`}>
+					<svg
+						width="24"
+						height="24"
+						viewBox="0 0 24 24"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							d="M6 9L12 15L18 9"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+						/>
+					</svg>
 				</div>
 			</div>
+			{isOpen && (
+				<div className={`${style.dropDownList} ${isOpen ? style.show : ""}`}>
+					{selects.map((select) => (
+						<div
+							key={select.id}
+							className={`${style.dropDownItem} ${
+								selectedItems.some((item) => item.id === select.id)
+									? style.selected
+									: ""
+							}`}
+							onClick={() => handleSelectChange(select)}
+						>
+							{select.payLoad}
+						</div>
+					))}
+				</div>
+			)}
 		</div>
 	);
 };

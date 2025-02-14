@@ -26,9 +26,8 @@ export const AuctionsList: FC<AuctionsListProps> = ({ countries, onTotalResultsC
 	const [startDate, setStartDate] = useState<Date | undefined>(new Date());
 	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
 	const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false);
-	const [itemsPerPage, setItemsPerPage] = useState<number>(10);
+	const [itemsPerPage, setItemsPerPage] = useState<string>("10");
 	const [results, setResults] = useState<number>(0);
-	const [isLoading, setIsLoading] = useState(true);
 	const [auctions, setAuctions] = useState<Auction[]>([]);
 
 	const fetchAuctions = async () => {
@@ -39,19 +38,21 @@ export const AuctionsList: FC<AuctionsListProps> = ({ countries, onTotalResultsC
 				date_final_select: endDate ? format(endDate, "yyyy-MM-dd") : null,
 			};
 
-			const response = await auctionsService.getAuctions(1, itemsPerPage, searchParams);
+			const response = await auctionsService.getAuctions(
+				1,
+				Number(itemsPerPage),
+				searchParams
+			);
 			console.log("Полученные аукционы:", response.auctions);
 			const totalResults = response.pagination.total_results;
 			setResults(totalResults);
 			setAuctions(response.auctions || []);
 			onTotalResultsChange?.(totalResults);
 		} catch (error) {
-			console.error("Error fetching auctions:", error);
+			console.error("Ошибка получения аукционов:", error);
 			setAuctions([]);
 			setResults(0);
 			onTotalResultsChange?.(0);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
@@ -118,24 +119,22 @@ export const AuctionsList: FC<AuctionsListProps> = ({ countries, onTotalResultsC
 					onClose={() => setIsDatePickerOpen(false)}
 				/>
 
-				<DisplayControls
-					itemsPerPage={itemsPerPage}
-					onItemsPerPageChange={setItemsPerPage}
-				/>
+				<DisplayControls onItemsPerPageChange={setItemsPerPage} />
 			</div>
 
 			<div className={styles.results}>
 				<p>
-					Найдено <span>{results} {getResultsText(results)}</span>
+					Найдено{" "}
+					<span>
+						{results} {getResultsText(results)}
+					</span>
 				</p>
 
-				{isLoading ? (
-					<div className={styles.loading}>Загрузка...</div>
-				) : auctions && auctions.length > 0 ? (
+				{auctions && auctions.length > 0 ? (
 					Object.entries(groupAuctionsByDate(auctions))
 						.sort(([dateA], [dateB]) => {
-							const timeA = new Date(dateA.split('.').reverse().join('-')).getTime();
-							const timeB = new Date(dateB.split('.').reverse().join('-')).getTime();
+							const timeA = new Date(dateA.split(".").reverse().join("-")).getTime();
+							const timeB = new Date(dateB.split(".").reverse().join("-")).getTime();
 							return timeA - timeB;
 						})
 						.map(([date, auctionsInGroup]) => (

@@ -14,3 +14,12 @@
 	align-items: center;
 	gap: 24px;
 }
+
+@media (max-width: 868px) {
+	.headerUpContent {
+		justify-content: end;
+	}
+	.headerUpContent > p {
+		display: none;
+	}
+}

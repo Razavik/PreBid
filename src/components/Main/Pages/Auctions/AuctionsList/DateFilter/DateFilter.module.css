@@ -1,7 +1,7 @@
 .dateFilter {
 	display: flex;
 	align-items: center;
-	gap: 1rem;
+	gap: 16px;
 	position: relative;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .dateInput {
-	padding: 0.5rem;
+	padding: 8px;
 	border: 1px solid #e0e0e0;
 	border-radius: 4px;
 	width: 250px;
@@ -70,4 +70,11 @@
 
 :global(.react-datepicker__month-container) {
 	padding: 5px;
+}
+
+@media (max-width: 630px) {
+	.dateFilter {
+		align-items: start;
+		flex-direction: column;
+	}
 }

@@ -66,7 +66,8 @@ export interface SearchParams {
 }
 
 class AuctionsService {
-    private readonly API_URL = "https://autoru.neonface.by/api/v2";
+    private readonly API_URL = import.meta.env.VITE_API_URL;
+    auctions: Auction[] = [];
 
     async getAuctions(
         page: number = 1,
@@ -107,7 +108,7 @@ class AuctionsService {
                 pagination: response.data.pagination
             };
         } catch (error) {
-            console.error("Error fetching auctions:", error);
+            console.error("Ошибка получения аукционов:", error);
             return {
                 auctions: [],
                 pagination: {

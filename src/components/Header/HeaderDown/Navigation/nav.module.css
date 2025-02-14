@@ -12,19 +12,35 @@
 .menuItem a {
 	text-decoration: none;
 	color: inherit;
+	font-size: 18px;
+	line-height: 24px;
+	text-wrap: nowrap;
 }
 
-.menuItem::after {
+.menuItem::after,
+.menuItem a::after {
 	content: "";
 	position: absolute;
 	left: 0;
-	bottom: 0;
+	bottom: -2px;
 	width: 0;
 	height: 1px;
 	background: #004dd5;
 	transition: width 0.3s ease;
 }
 
-.menuItem:hover::after {
+.menuItem:hover::after,
+.menuItem a:hover::after,
+.menuItem a.active::after {
 	width: 100%;
+}
+
+.menuItem a.active {
+	color: #004dd5;
+}
+
+@media (max-width: 1652px) {
+	.navMenu {
+		display: none;
+	}
 }

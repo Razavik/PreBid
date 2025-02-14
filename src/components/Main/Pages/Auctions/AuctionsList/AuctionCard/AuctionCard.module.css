@@ -35,14 +35,14 @@
 
 .mainInfo {
 	display: flex;
-	align-items: flex-start;
+	align-items: start;
 	gap: 16px;
 	justify-content: space-between;
 	margin-bottom: 16px;
 }
 
 .mainInfo > div {
-	width: 25%;
+	width: clamp(max-content, 25%, 25%);
 }
 
 .mainInfo > div:first-child {
@@ -118,4 +118,10 @@
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
+}
+
+@media (max-width: 900px) {
+	.mainInfo {
+		flex-direction: column;
+	}
 }

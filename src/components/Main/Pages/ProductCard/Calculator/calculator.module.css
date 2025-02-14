@@ -1,0 +1,152 @@
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+
+.modal {
+	background: white;
+	border-radius: 8px;
+	padding: 30px 0;
+	width: 100%;
+	max-width: 400px;
+	position: relative;
+	animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+	from {
+		transform: translateY(-20px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+.closeButton {
+	position: absolute;
+	right: 16px;
+	top: 16px;
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: #666;
+}
+
+.closeButton:hover {
+	color: #333;
+}
+
+.title {
+	font-size: 18px;
+	font-weight: 700;
+	padding: 0 54px;
+}
+
+.content {
+	margin-top: 20px;
+}
+
+.inputGroup {
+	margin-bottom: 32px;
+	padding: 0 54px;
+}
+
+.inputGroup label {
+	display: block;
+	margin-bottom: 8px;
+	color: #333;
+}
+
+.inputGroup input {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 16px;
+	outline: none;
+}
+
+.inputGroup input:focus {
+	border-color: #3498ff;
+}
+
+.hint {
+	display: block;
+	font-size: 12px;
+	color: #666;
+	margin-top: 4px;
+	margin-bottom: 12px;
+}
+
+.calculateButton {
+	width: 100%;
+	padding: 12px;
+	background-color: #7ac143;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.calculateButton:hover {
+	background-color: #68a939;
+}
+
+.results {
+	margin-top: 24px;
+	padding-top: 24px;
+	border-top: 1px solid #eee;
+}
+
+.totalCostWrapper {
+	text-align: center;
+	padding: 28px 0;
+	background-color: #edf6ff;
+	border-radius: 4px;
+	border: 1px solid #d3d8e5;
+}
+
+.totalCostWrapper h3 {
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.totalCost {
+	font-size: 40px;
+	font-weight: 700;
+}
+
+.feesList {
+	padding: 0 54px;
+	margin-top: 32px;
+}
+
+.feeItem {
+	display: flex;
+	justify-content: space-between;
+	padding: 12px 0;
+	border-bottom: 1px solid #6b7a99;
+}
+
+.feeItem span {
+	font-size: 14px;
+	color: #575757;
+}
+
+.feeItem:first-of-type {
+	border-top: none;
+	padding-top: 0;
+}

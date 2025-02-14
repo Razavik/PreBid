@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Client {
-    name_ru: string;
-    second_name_ru: string | null;
-    code: number;
-}
+import { Client } from "types/user.types";
 
 interface UserState {
     info: Client | null;

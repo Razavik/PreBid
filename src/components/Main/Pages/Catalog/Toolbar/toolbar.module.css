@@ -1,29 +1,115 @@
 .toolbar {
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	gap: 16px;
+	background: var(--bg-white);
+	border-radius: 8px;
+}
+
+.toolbarTop {
+	display: flex;
 	align-items: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.leftSide {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	white-space: nowrap;
+}
+
+.mobileButton {
+	display: none;
+}
+
+.leftSide > span:last-of-type {
+	font-weight: 700;
+}
+
+.rightSide {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.selectedFilters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	flex: 1;
+}
+.viewButtons {
+	display: flex;
+	gap: 8px;
+	white-space: nowrap;
+}
+
+.button {
+	display: flex;
+	padding: 8px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: background-color 0.2s;
+}
+
+.button:hover {
+	background-color: var(--bg-hover);
+}
+
+.button.active {
+	background-color: var(--bg-active);
+}
+
+.resetButton {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	border: 1px solid #6b7a99;
+	color: #6b7a99;
+	padding: 7px 8px;
+	border-radius: 100px;
+	cursor: pointer;
+	background: none;
+	text-wrap: nowrap;
 }
 
 .title {
-	width: max-content;
-	font-size: 18px;
-	line-height: 24px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 }
 
-.title span:first-child {
+.titles span {
+	color: var(--text-primary);
+}
+
+.tools > span:first-of-type {
 	color: #6b7a99;
 	font-weight: 400;
 }
 
-.title span:last-child {
+.tools > span:last-of-type {
 	font-weight: 700;
 	margin-left: 8px;
 }
 
-.viewButtons {
+.title button {
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.toolbarView {
 	display: flex;
-	align-items: center;
-	gap: 5px;
+	justify-content: flex-end;
+	gap: 40px;
+}
+
+.viewButtons {
+	margin-left: 10px;
 }
 
 .viewButtons .button {
@@ -49,7 +135,38 @@
 	fill: #004dd5;
 }
 
-.toolbarView {
+.selectedFilters:empty {
+	display: none;
+}
+
+.title button {
+	display: none !important;
+	margin-right: 20px;
+}
+
+.tools {
 	display: flex;
-	gap: 40px;
+}
+
+@media (max-width: 1279px) {
+	.title button {
+		display: inline-flex !important;
+	}
+
+	.mobileButton {
+		display: block;
+	}
+}
+
+@media (max-width: 720px) {
+	.toolbarView {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.leftSide {
+		flex-direction: column;
+		align-items: start;
+	}
 }

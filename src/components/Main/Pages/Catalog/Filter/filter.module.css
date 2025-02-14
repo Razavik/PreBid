@@ -1,12 +1,12 @@
 .filter {
-	max-width: 324px;
-	width: 100%;
+	width: 324px;
 	background: white;
-	padding: 24px 12px 43px;
+	padding: 12px;
 	border-radius: 4px;
 	border: 1px solid #d3d8e6;
 	margin-right: 36px;
 	gap: 0 !important;
+	position: relative;
 }
 
 .header {
@@ -24,22 +24,10 @@
 	margin: 0;
 }
 
-.resetButton {
-	text-decoration-line: underline;
-	text-decoration-style: solid;
-    color: #004DD5;
-    background-color: initial;
-    border: none;
-    cursor: pointer;
-}
-
-.resetButton:hover {
-	color: #333;
-}
-
 .filterBody {
 	display: flex;
 	flex-direction: column;
+	margin-bottom: 12px;
 }
 
 .filterItem {
@@ -63,4 +51,37 @@
 
 .showResults:hover {
 	background: #003caa;
+}
+
+.closeButton {
+	display: none;
+	position: absolute;
+	right: -40px;
+	top: 45%;
+	z-index: 9999;
+	background: white;
+	border: 1px solid #e0e0e0;
+	border-radius: 100px;
+	cursor: pointer;
+	color: #6b7a99;
+	padding: 16px;
+	transition: color 0.3s ease;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+	font-size: 0;
+}
+
+.closeButton:hover {
+	color: #004dd5;
+}
+
+@media (max-width: 1279px) {
+	.filter {
+		border: none;
+		margin-right: 0;
+		padding: 0;
+	}
+
+	.closeButton {
+		display: inline-block;
+	}
 }

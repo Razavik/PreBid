@@ -16,6 +16,7 @@ export const LogoutModal: FC<LogoutModalProps> = ({ isOpen, onClose }) => {
 	const handleClick = () => {
 		onClose();
 		navigate("/");
+		window.location.reload();
 	};
 
 	return (

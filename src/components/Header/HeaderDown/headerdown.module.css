@@ -1,25 +1,63 @@
 .headerDown {
 	border-bottom: 1px solid #f2f6fc;
+	background: #fff;
 }
 
 .headerDownContent {
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
-	gap: 10px;
-	padding: 19px 0;
+	align-items: center;
+	padding: 16px 0;
+	gap: 16px;
 }
 
-.headerDownLeft,
+.headerDownLeft {
+	display: flex;
+	align-items: center;
+	gap: 32px;
+}
+
 .headerDownRight {
 	display: flex;
 	align-items: center;
-	gap: 40px;
-}
-
-.headerDownRight {
+	gap: 16px;
 	justify-content: end;
 	gap: 34px;
 	max-width: 707px;
 	width: 100%;
+}
+
+.logo {
+	width: clamp(150px, 20vw, 225px);
+	height: auto;
+}
+
+.burger {
+	display: none;
+}
+
+@media (max-width: 1652px) {
+	.headerDownLeft ul {
+		display: none;
+	}
+
+	.burger {
+		display: block;
+	}
+}
+
+@media (max-width: 847px) {
+	.hideContent {
+		display: none;
+	}
+
+	.headerDownRight {
+		flex-grow: 1;
+	}
+}
+
+@media (max-width: 659px) {
+	.headerDownRight > button {
+		display: none;
+	}
 }

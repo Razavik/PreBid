@@ -1,0 +1,108 @@
+.backButton {
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	color: #0065b0;
+	gap: 10px;
+	margin: 25px 0 30px;
+}
+
+.backButton svg {
+	font-size: 1em;
+}
+
+.title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 24px;
+}
+
+.title h1 {
+	font-size: 36px;
+	line-height: 50px;
+	font-weight: bolder;
+}
+
+.titleRight {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.titleRight button {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	border: none;
+	background: none;
+	cursor: pointer;
+}
+
+.titleRight button img {
+	width: 15px;
+	height: 100%;
+}
+
+.titleRight button span {
+	font-size: 14px;
+}
+
+.favorite {
+	color: #0065b0;
+}
+
+.share {
+	color: #6b7a99;
+}
+
+.productCardInner {
+	display: flex;
+	gap: 32px;
+	margin-top: 32px;
+}
+
+.productCardContent {
+	display: flex;
+	gap: 32px;
+}
+
+.other {
+	width: 55%;
+}
+
+.calculatorButton {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 32px 0;
+	background: none;
+	color: #0050cf;
+	border: none;
+	cursor: pointer;
+}
+
+.calculatorButton span {
+	border-bottom: 1px solid #0050cf;
+}
+
+@media (max-width: 1582px) {
+	.productCardInner {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 1024px) {
+	.productCardContent {
+		flex-direction: column;
+	}
+
+	.productCard > div {
+		width: 100%;
+	}
+	.other {
+		width: 100%;
+	}
+}

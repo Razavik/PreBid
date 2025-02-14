@@ -1,9 +1,9 @@
 import { FC, ReactNode, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../store";
+import { RootState } from "@store/store";
 import style from "./nav.module.css";
-import { LoginForm } from "../../../LoginForm/LoginForm";
+import { LoginForm } from "@components/LoginForm/LoginForm";
 
 type ItemContent = ReactNode | string;
 
@@ -50,16 +50,18 @@ const Nav: FC<MenuItems> = ({ items }) => {
 	};
 
 	return (
-		<>
-			<ul className={style.navMenu}>
-				{items.map((item) => (
-					<li key={item.id} className={style.menuItem}>
-						<Link to={item.path} onClick={(e) => handleClick(e, item)}>
-							{item.content}
-						</Link>
-					</li>
-				))}
-			</ul>
+		<nav className={style.navMenu}>
+			{items.map((item) => (
+				<div key={item.id} className={style.menuItem}>
+					<NavLink
+						to={item.path}
+						onClick={(e) => handleClick(e, item)}
+						className={({ isActive }) => (isActive ? style.active : undefined)}
+					>
+						{item.content}
+					</NavLink>
+				</div>
+			))}
 			{showLoginModal && (
 				<LoginForm
 					isOpen={showLoginModal}
@@ -67,7 +69,7 @@ const Nav: FC<MenuItems> = ({ items }) => {
 					onRegisterClick={handleRegisterClick}
 				/>
 			)}
-		</>
+		</nav>
 	);
 };
 

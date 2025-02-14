@@ -1,0 +1,170 @@
+.button {
+	display: none;
+	justify-content: space-between;
+	border: none;
+	background: none;
+	cursor: pointer;
+	border-bottom: 1px solid #0065b0;
+	color: #0065b0;
+	padding-bottom: 12px;
+}
+
+.characteristics {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+	width: 45%;
+}
+
+.infoCard {
+	background: #ffffff;
+	border-radius: 4px;
+	border: 1px solid #d3d8e5;
+	overflow: hidden;
+}
+
+.infoCard h2 {
+	color: #333;
+	font-size: 16px;
+	line-height: 42px;
+	font-weight: 400;
+	padding: 10px 12px;
+	background-color: #f0f5ff;
+}
+
+.infoGrid {
+	padding: 12px;
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+}
+
+.infoItem {
+	display: flex;
+	align-items: center;
+	padding: 12px 0;
+	border-bottom: 1px solid black;
+}
+
+.infoItem:last-of-type {
+	border: none;
+	padding-bottom: 0;
+}
+
+.infoItem span {
+	width: 40%;
+}
+
+.vinContainer span {
+	justify-content: start;
+	width: max-content;
+}
+
+.label {
+	color: #6b7a99;
+	font-size: 14px;
+}
+
+.value {
+	color: black;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.vinContainer {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 40%;
+}
+
+.vinValue {
+	cursor: pointer;
+	transition: color 0.2s;
+}
+
+.vinValue:hover {
+	color: #1890ff;
+}
+
+.copyButton {
+	background: none;
+	border: none;
+	padding: 4px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #6b7a99;
+	transition: color 0.2s;
+}
+
+.copyButton:hover {
+	color: #1890ff;
+}
+
+.keyWrapper {
+	position: relative;
+	display: inline-block;
+}
+
+.keyWrapper span {
+	cursor: pointer;
+	color: #004dd5;
+	border-bottom: 1px solid #004dd5;
+}
+
+.keyImage {
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: white;
+	padding: 10px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	z-index: 1;
+	margin-bottom: 8px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+	transform: translateX(-50%) translateY(10px);
+}
+
+.keyImage img {
+	max-width: 200px;
+	height: auto;
+	display: block;
+}
+
+.keyImage::after {
+	content: "";
+	position: absolute;
+	bottom: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 8px solid white;
+}
+
+.keyWrapper:hover .keyImage {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 1024px) {
+	.characteristics {
+		width: 100%;
+	}
+}
+
+@media (max-width: 768px) {
+	.button {
+		display: flex;
+	}
+
+	.characteristics {
+		grid-template-columns: 1fr;
+	}
+}

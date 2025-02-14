@@ -1,274 +1,292 @@
-import { useState } from "react";
+import { FC } from "react";
 import style from "./filter.module.css";
-import DropDownFilter from "@ui/DropDownLists/DropDownFilter/DropDownFilter";
+import DropDownFilter, { SelectsInterface } from "@ui/DropDownLists/DropDownFilter/DropDownFilter";
+import Button, { ColorButton } from "@ui/Button/Button";
 import DropDownRange from "@ui/DropDownLists/DropDownRange/DropDownRange";
-import SelectedFilters, {
-	SelectedFilter,
-} from "./SelectedFilters/SelectedFilters";
 
-const vehicleTypes = [
-	{ id: "1", payLoad: "Все транспортные средства" },
-	{ id: "2", payLoad: "Легковые" },
-	{ id: "3", payLoad: "Грузовые" },
-	{ id: "4", payLoad: "Мотоциклы" },
-];
+interface FilterProps {
+	onClose?: () => void;
+	filters: TransportFilters | null;
+	onSearch: (searchParams: Record<string, any>) => void;
+	onFilterChange: (filters: Record<string, any>) => void;
+	selectedFilters: Record<string, any>;
+	editingFilters: TransportFilters | null;
+}
 
-const conditions = [
-	{ id: "1", payLoad: "Новый" },
-	{ id: "2", payLoad: "Б/У" },
-];
+interface FilterOption extends SelectsInterface {
+	payLoad: string;
+}
 
-const transmissions = [
-	{ id: "1", payLoad: "Механическая" },
-	{ id: "2", payLoad: "Автоматическая" },
-	{ id: "3", payLoad: "Роботизированная" },
-];
+export interface TransportFilters {
+	transportBrand: FilterOption[];
+	transportModel: FilterOption[];
+	transportType: FilterOption[];
+	transportDrive: FilterOption[];
+	transportFuel: FilterOption[];
+	transportTransmission: FilterOption[];
+	transportHighlight: FilterOption[];
+	transportColor: FilterOption[];
+	odometer: number[];
+	year: number[];
+	keys: FilterOption[];
+}
 
-const fuelTypes = [
-	{ id: "1", payLoad: "Бензин" },
-	{ id: "2", payLoad: "Дизель" },
-	{ id: "3", payLoad: "Электро" },
-	{ id: "4", payLoad: "Гибрид" },
-];
+const Filter: FC<FilterProps> = ({
+	onClose,
+	filters,
+	onSearch,
+	onFilterChange,
+	selectedFilters,
+	editingFilters,
+}) => {
+	const handleFilterChange = (
+		property: string,
+		value: SelectsInterface | SelectsInterface[] | null
+	) => {
+		const newFilters = { ...selectedFilters };
 
-const driveTypes = [
-	{ id: "1", payLoad: "Передний" },
-	{ id: "2", payLoad: "Задний" },
-	{ id: "3", payLoad: "Полный" },
-];
-
-const bodyTypes = [
-	{ id: "1", payLoad: "Седан" },
-	{ id: "2", payLoad: "Хэтчбек" },
-	{ id: "3", payLoad: "Универсал" },
-	{ id: "4", payLoad: "Внедорожник" },
-	{ id: "5", payLoad: "Купе" },
-	{ id: "6", payLoad: "Кабриолет" },
-	{ id: "7", payLoad: "Пикап" },
-	{ id: "8", payLoad: "Минивэн" },
-];
-
-const cylinders = [
-	{ id: "1", payLoad: "2" },
-	{ id: "2", payLoad: "3" },
-	{ id: "3", payLoad: "4" },
-	{ id: "4", payLoad: "5" },
-	{ id: "5", payLoad: "6" },
-	{ id: "6", payLoad: "8" },
-	{ id: "7", payLoad: "12" },
-];
-
-const statuses = [
-	{ id: "1", payLoad: "В продаже" },
-	{ id: "2", payLoad: "В пути" },
-	{ id: "3", payLoad: "Продано" },
-];
-
-const brands = [
-	{ id: "1", payLoad: "Audi" },
-	{ id: "2", payLoad: "BMW" },
-	{ id: "3", payLoad: "Mercedes-Benz" },
-	{ id: "4", payLoad: "Toyota" },
-	{ id: "5", payLoad: "Volkswagen" },
-	{ id: "6", payLoad: "Honda" },
-	{ id: "7", payLoad: "Hyundai" },
-	{ id: "8", payLoad: "Kia" },
-];
-
-const models = [
-	{ id: "1", payLoad: "A3" },
-	{ id: "2", payLoad: "A4" },
-	{ id: "3", payLoad: "A6" },
-	{ id: "4", payLoad: "Q5" },
-	{ id: "5", payLoad: "Q7" },
-];
-
-const Filter = () => {
-	const [selectedFilters, setSelectedFilters] = useState<SelectedFilter[]>([]);
-
-	const getSelectedValuesForTitle = (title: string) => {
-		return selectedFilters
-			.filter(filter => filter.title === title)
-			.map(filter => filter.value);
-	};
-
-	const handleFilterSelect = (title: string, value: string) => {
-		const newFilter: SelectedFilter = {
-			id: `${title}-${value}`,
-			title,
-			value,
-		};
-
-		const existingFilter = selectedFilters.find(
-			(filter) => filter.id === newFilter.id
-		);
-
-		if (existingFilter) {
-			setSelectedFilters((prev) =>
-				prev.filter((filter) => filter.id !== newFilter.id)
-			);
+		if (!value) {
+			delete newFilters[property];
+		} else if (Array.isArray(value)) {
+			newFilters[property] = value.map((v) => Number(v.id));
 		} else {
-			setSelectedFilters((prev) => [...prev, newFilter]);
+			newFilters[property] = Number(value.id);
 		}
+
+		onFilterChange(newFilters);
 	};
 
-	const handleFilterRemove = (id: string) => {
-		setSelectedFilters((prev) => prev.filter((filter) => filter.id !== id));
+	const handleOdometerChange = (range: { min: number; max: number } | null) => {
+		const newFilters = { ...selectedFilters };
+		if (range === null) {
+			delete newFilters.odometer;
+		} else {
+			newFilters.odometer = range;
+		}
+		onFilterChange(newFilters);
 	};
 
-	const handleResetAll = () => {
-		setSelectedFilters([]);
+	const handleYearChange = (range: { min: number; max: number } | null) => {
+		const newFilters = { ...selectedFilters };
+		if (range === null) {
+			delete newFilters.year;
+		} else {
+			newFilters.year = range;
+		}
+		onFilterChange(newFilters);
 	};
 
-	const handleYearRangeChange = (range: { start: string; end: string }) => {
-		const yearRangeId = `Год выпуска-${range.start}-${range.end}`;
-
-		const filtersWithoutYear = selectedFilters.filter(
-			(filter) => !filter.id.startsWith("Год выпуска-")
-		);
-
-		setSelectedFilters([
-			...filtersWithoutYear,
-			{
-				id: yearRangeId,
-				title: "Год выпуска",
-				value: `${range.start} - ${range.end}`,
-			},
-		]);
+	const handleSearch = () => {
+		if (Object.keys(selectedFilters).length > 0) {
+			const searchFilters = { ...selectedFilters };
+			if (editingFilters?.year && !searchFilters.year) {
+				searchFilters.year = { min: editingFilters.year[0], max: editingFilters.year[1] };
+			}
+			if (editingFilters?.odometer && !searchFilters.odometer) {
+				searchFilters.odometer = {
+					min: editingFilters.odometer[0],
+					max: editingFilters.odometer[1],
+				};
+			}
+			onSearch(searchFilters);
+		}
+		onClose?.();
 	};
+
+	if (!filters) {
+		return null;
+	}
 
 	return (
 		<div className={style.filter}>
-			<div className={style.header}>
-				<h3>Фильтры</h3>
-				<button className={style.resetButton} onClick={handleResetAll}>
-					Сбросить все
+			{onClose && (
+				<button onClick={onClose} className={style.closeButton}>
+					<svg
+						width="20"
+						height="20"
+						viewBox="0 0 16 16"
+						fill="currentColor"
+						stroke="currentColor"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							strokeWidth="0.3"
+							d="M5.854 2.146a.5.5 0 01.058.638l-.058.069-4.147 4.146H15.5a.5.5 0 010 1H1.707l4.147 4.146a.5.5 0 01-.707.707L.11 7.81l-.042-.062-.029-.059-.021-.062-.011-.054-.004-.031-.002-.053c.001-.021.002-.042.005-.063L.001 7.5l.003-.053.014-.075.021-.063.039-.076.04-.055 5.029-5.031a.5.5 0 01.707 0z"
+						/>
+					</svg>
 				</button>
-			</div>
-
-			{selectedFilters.length > 0 && (
-				<SelectedFilters
-					filters={selectedFilters}
-					onRemove={handleFilterRemove}
-				/>
 			)}
-
 			<div className={style.filterBody}>
 				<div className={style.filterItem}>
 					<DropDownFilter
-						title="Все транспортные средства"
-						selects={vehicleTypes}
-						onSelect={(value) => handleFilterSelect("Тип", value as string)}
-						selectedValues={getSelectedValuesForTitle("Тип")}
+						label="Состояние"
+						selects={filters.transportHighlight}
+						isMulti
+						onChange={(value) => handleFilterChange("transportHighlight", value)}
+						value={
+							selectedFilters.transportHighlight
+								? filters.transportHighlight.filter((option) =>
+										selectedFilters.transportHighlight.includes(
+											Number(option.id)
+										)
+								  )
+								: null
+						}
+					/>
+				</div>
+				<div className={style.filterItem}>
+					<DropDownFilter
+						label="Марка"
+						selects={filters.transportBrand}
+						onChange={(value) => handleFilterChange("transportBrand", value)}
+						value={
+							selectedFilters.transportBrand
+								? filters.transportBrand.find(
+										(option) =>
+											option.id === selectedFilters.transportBrand.toString()
+								  )
+								: null
+						}
+					/>
+				</div>
+				<div className={style.filterItem}>
+					<DropDownFilter
+						label="Модель"
+						selects={filters.transportModel}
+						onChange={(value) => handleFilterChange("transportModel", value)}
+						value={
+							selectedFilters.transportModel
+								? filters.transportModel.find(
+										(option) =>
+											option.id === selectedFilters.transportModel.toString()
+								  )
+								: null
+						}
 					/>
 				</div>
 
 				<div className={style.filterItem}>
 					<DropDownFilter
-						title="Состояние"
-						selects={conditions}
-						onSelect={(value) => handleFilterSelect("Состояние", value as string)}
-						selectedValues={getSelectedValuesForTitle("Состояние")}
+						label="Тип транспорта"
+						selects={filters.transportType}
+						onChange={(value) => handleFilterChange("transportType", value)}
+						value={
+							selectedFilters.transportType
+								? filters.transportType.find(
+										(option) =>
+											option.id === selectedFilters.transportType.toString()
+								  )
+								: null
+						}
+					/>
+				</div>
+
+				<div className={style.filterItem}>
+					<DropDownFilter
+						label="Трансмиссия"
+						selects={filters.transportTransmission}
+						isMulti
+						onChange={(value) => handleFilterChange("transportTransmission", value)}
+						value={
+							selectedFilters.transportTransmission
+								? filters.transportTransmission.filter((option) =>
+										selectedFilters.transportTransmission.includes(
+											Number(option.id)
+										)
+								  )
+								: null
+						}
 					/>
 				</div>
 
 				<div className={style.filterItem}>
 					<DropDownRange
-						onChange={handleYearRangeChange}
 						label="Одометр"
+						min={filters.odometer[0]}
+						max={filters.odometer[1]}
+						hasSlider={true}
+						onChange={handleOdometerChange}
+						value={selectedFilters.odometer}
+						unit="км"
 					/>
 				</div>
-
 				<div className={style.filterItem}>
 					<DropDownRange
-						onChange={handleYearRangeChange}
-						label="Год выпуска"
+						label="Год"
+						min={filters.year[0]}
+						max={filters.year[1]}
+						hasSlider={false}
+						onChange={handleYearChange}
+						value={selectedFilters.year}
 					/>
 				</div>
 
 				<div className={style.filterItem}>
 					<DropDownFilter
-						title="Марка"
-						selects={brands}
-						onSelect={(value) => handleFilterSelect("Марка", value as string)}
-						selectedValues={getSelectedValuesForTitle("Марка")}
+						label="Тип топлива"
+						selects={filters.transportFuel}
+						isMulti
+						onChange={(value) => handleFilterChange("transportFuel", value)}
+						value={
+							selectedFilters.transportFuel
+								? filters.transportFuel.filter((option) =>
+										selectedFilters.transportFuel.includes(Number(option.id))
+								  )
+								: null
+						}
 					/>
 				</div>
 
 				<div className={style.filterItem}>
 					<DropDownFilter
-						title="Модель"
-						selects={models}
-						onSelect={(value) => handleFilterSelect("Модель", value as string)}
-						selectedValues={getSelectedValuesForTitle("Модель")}
+						label="Привода"
+						selects={filters.transportDrive}
+						isMulti
+						onChange={(value) => handleFilterChange("transportDrive", value)}
+						value={
+							selectedFilters.transportDrive
+								? filters.transportDrive.filter((option) =>
+										selectedFilters.transportDrive.includes(Number(option.id))
+								  )
+								: null
+						}
 					/>
 				</div>
 
 				<div className={style.filterItem}>
 					<DropDownFilter
-						title="Тип двигателя"
-						selects={fuelTypes}
-						onSelect={(value) => handleFilterSelect("Тип двигателя", value as string)}
-						selectedValues={getSelectedValuesForTitle("Тип двигателя")}
+						label="Цвет кузова"
+						selects={filters.transportColor}
+						isMulti
+						onChange={(value) => handleFilterChange("transportColor", value)}
+						value={
+							selectedFilters.transportColor
+								? filters.transportColor.filter((option) =>
+										selectedFilters.transportColor.includes(Number(option.id))
+								  )
+								: null
+						}
 					/>
 				</div>
-
 				<div className={style.filterItem}>
 					<DropDownFilter
-						title="Передача"
-						selects={transmissions}
-						onSelect={(value) => handleFilterSelect("Коробка передач", value as string)}
-						selectedValues={getSelectedValuesForTitle("Коробка передач")}
-					/>
-				</div>
-
-				<div className={style.filterItem}>
-					<DropDownFilter
-						title="Тип топлива"
-						selects={fuelTypes}
-						onSelect={(value) => handleFilterSelect("Тип топлива", value as string)}
-						selectedValues={getSelectedValuesForTitle("Тип топлива")}
-					/>
-				</div>
-
-				<div className={style.filterItem}>
-					<DropDownFilter
-						title="Приводной механизм"
-						selects={driveTypes}
-						onSelect={(value) => handleFilterSelect("Привод", value as string)}
-						selectedValues={getSelectedValuesForTitle("Привод")}
-					/>
-				</div>
-
-				<div className={style.filterItem}>
-					<DropDownFilter
-						title="Цилиндр"
-						selects={cylinders}
-						onSelect={(value) => handleFilterSelect("Цилиндр", value as string)}
-						selectedValues={getSelectedValuesForTitle("Цилиндр")}
-					/>
-				</div>
-
-				<div className={style.filterItem}>
-					<DropDownFilter
-						title="Тип кузова"
-						selects={bodyTypes}
-						onSelect={(value) => handleFilterSelect("Тип кузова", value as string)}
-						selectedValues={getSelectedValuesForTitle("Тип кузова")}
-					/>
-				</div>
-
-				<div className={style.filterItem}>
-					<DropDownFilter
-						title="Статус"
-						selects={statuses}
-						onSelect={(value) => handleFilterSelect("Статус", value as string)}
-						selectedValues={getSelectedValuesForTitle("Статус")}
+						label="Ключи"
+						selects={filters.keys}
+						isMulti
+						onChange={(value) => handleFilterChange("keys", value)}
+						value={
+							selectedFilters.keys
+								? filters.keys.filter((option) =>
+										selectedFilters.keys.includes(Number(option.id))
+								  )
+								: null
+						}
 					/>
 				</div>
 			</div>
-
-			<button className={style.showResults}>Показать результаты</button>
+			<Button colorButton={ColorButton.BLUE} isFullWidth onClick={handleSearch}>
+				Применить фильтры
+			</Button>
 		</div>
 	);
 };

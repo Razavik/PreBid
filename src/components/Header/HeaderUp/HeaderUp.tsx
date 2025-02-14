@@ -6,7 +6,50 @@ import { SelectsInterface } from "@components/ui/DropDownLists/DropDownHeader/Dr
 
 import style from "./headerup.module.css";
 
-import settings from "./settings.json";
+const settings = {
+	regions: [
+		{
+			id: "ru-region",
+			payLoad: "BY.svg",
+		},
+		{
+			id: "en-region",
+			payLoad: "BY.svg",
+		},
+		{
+			id: "by-region",
+			payLoad: "BY.svg",
+		},
+	],
+	languages: [
+		{
+			id: "ru-lang",
+			payLoad: "RU",
+		},
+		{
+			id: "en-lang",
+			payLoad: "EN",
+		},
+		{
+			id: "by-lang",
+			payLoad: "BY",
+		},
+	],
+	currencies: [
+		{
+			id: "ru-currency",
+			payLoad: "Рубль Россия",
+		},
+		{
+			id: "en-currency",
+			payLoad: "Доллар США",
+		},
+		{
+			id: "by-currency",
+			payLoad: "Рубль Беларусь",
+		},
+	],
+};
 
 const HeaderUp: FC = () => {
 	const pathToRegions = "/src/assets/img/icons/";

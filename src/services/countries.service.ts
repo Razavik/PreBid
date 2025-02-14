@@ -19,14 +19,14 @@ interface CountriesResponse {
 }
 
 class CountriesService {
-    private readonly API_URL = "https://autoru.neonface.by/api/v2";
+    private readonly API_URL = import.meta.env.VITE_API_URL;
 
     async getCountries(): Promise<Country[]> {
         try {
             const response = await axios.get<CountriesResponse>(`${this.API_URL}/countries`);
             return response.data.countries;
         } catch (error) {
-            console.error("Error fetching countries:", error);
+            console.error("Ошибка получения стран:", error);
             return [];
         }
     }

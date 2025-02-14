@@ -1,3 +1,28 @@
+.mobile {
+	display: none;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.mobile > button {
+	margin-left: auto;
+}
+
+.backButton {
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.searchWrapper {
+	width: 100%;
+}
+
+.searchWrapper > .searchField {
+	margin-left: auto;
+}
+
 .searchField {
 	max-width: 454px;
 	width: 100%;
@@ -18,7 +43,8 @@
 	border: 1px solid #d3d8e6;
 }
 
-.searchField button {
+.searchField button,
+.searchButton {
 	cursor: pointer;
 	border: none;
 	border-radius: 0 3px 3px 0;
@@ -31,7 +57,12 @@
 	justify-content: center;
 }
 
-.searchField button:hover {
+.searchButton {
+	border-radius: 3px;
+}
+
+.searchField button:hover,
+.searchButton:hover {
 	background-color: #76df19;
 	transition: all 0.3s ease;
 }
@@ -46,4 +77,25 @@
 
 .searchField input:focus {
 	outline: none;
+}
+
+.searchExpanded {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+@media (max-width: 847px) {
+	.searchWrapper > .searchField {
+		display: none;
+	}
+
+	.mobile {
+		display: block;
+	}
+
+	.searchField {
+		width: 100%;
+	}
 }

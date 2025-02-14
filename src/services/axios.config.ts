@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { authService } from './auth.service';
 import { store } from '@store/store';
-import { clearAuth, setShowLogoutModal } from '@store/slices/authSlice';
-import { clearUserInfo } from '@store/slices/userSlice';
+import { setShowLogoutModal } from '@store/slices/authSlice';
 import { startLoading, stopLoading } from '@store/slices/loadingSlice';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://autoru.neonface.by/api/v2',
+    baseURL: import.meta.env.VITE_API_URL,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -29,7 +28,7 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// Обрабатываем ответы и ошибки
+// Обработка ответов
 axiosInstance.interceptors.response.use(
     (response) => {
         store.dispatch(stopLoading());
@@ -37,37 +36,27 @@ axiosInstance.interceptors.response.use(
     },
     async (error) => {
         store.dispatch(stopLoading());
-        const originalRequest = error.config;
 
-        // Если ошибка 401 (Unauthorized) и это не повторный запрос
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
-
+        // Если получаем 401 и это не запрос на обновление токена
+        if (
+            error.response?.status === 401 &&
+            !error.config.url.includes('/user/refresh')
+        ) {
             try {
                 // Пробуем обновить токен
                 const newToken = await authService.refreshToken();
-                
+
                 if (newToken) {
-                    // Если получили новый токен, повторяем исходный запрос
-                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
-                    return axiosInstance(originalRequest);
-                } else {
-                    // Если не удалось обновить токен, выходим из системы
-                    store.dispatch(setShowLogoutModal(true));
-                    store.dispatch(clearAuth());
-                    store.dispatch(clearUserInfo());
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('user_info');
+                    // Повторяем исходный запрос с новым токеном
+                    error.config.headers['Authorization'] = `Bearer ${newToken}`;
+                    return axiosInstance(error.config);
                 }
             } catch (refreshError) {
-                // В случае ошибки обновления токена, выходим из системы
-                store.dispatch(setShowLogoutModal(true));
-                store.dispatch(clearAuth());
-                store.dispatch(clearUserInfo());
-                localStorage.removeItem('token');
-                localStorage.removeItem('user_info');
-                return Promise.reject(refreshError);
+                console.error('Ошибка при обновлении токена:', refreshError);
             }
+
+            // Если не удалось обновить токен, выходим из системы
+            store.dispatch(setShowLogoutModal(true));
         }
 
         return Promise.reject(error);

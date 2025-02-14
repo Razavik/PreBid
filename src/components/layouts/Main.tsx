@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
@@ -9,6 +9,22 @@ import { RegisterForm } from "../RegisterForm/RegisterForm";
 const Main = () => {
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+	const mainRef = useRef<HTMLElement>(null);
+
+	useEffect(() => {
+		const mainElement = mainRef.current;
+		if (mainElement) {
+			const handleOpenLoginModal = () => {
+				setIsRegisterModalOpen(false);
+				setIsAuthModalOpen(true);
+			};
+
+			mainElement.addEventListener('openLoginModal', handleOpenLoginModal);
+			return () => {
+				mainElement.removeEventListener('openLoginModal', handleOpenLoginModal);
+			};
+		}
+	}, []);
 
 	const handleLoginClick = () => {
 		setIsRegisterModalOpen(false);
@@ -31,7 +47,7 @@ const Main = () => {
 	return (
 		<>
 			<Header onLoginClick={handleLoginClick} />
-			<main>
+			<main ref={mainRef}>
 				<UnregBlock onLoginClick={handleLoginClick} onRegisterClick={handleRegisterClick} />
 				<Outlet />
 			</main>

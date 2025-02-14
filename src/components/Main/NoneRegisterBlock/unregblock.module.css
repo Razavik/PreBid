@@ -1,28 +1,51 @@
 .unregBlock {
-	background: linear-gradient(0deg, #f7f9fd, #f7f9fd),
-		linear-gradient(
-			310.13deg,
-			rgba(116, 137, 210, 0.2) 20.31%,
-			rgba(247, 249, 253, 0.2) 49.21%
-		);
+	background-color: linear-gradient(0deg, #f7f9fd, #f7f9fd),
+		linear-gradient(310.13deg, rgba(116, 137, 210, 0.2) 20.31%, rgba(247, 249, 253, 0.2) 49.21%);
+	background-image: url("/src/assets/img/imageUnregBlock.png");
+	background-repeat: no-repeat;
+	background-position: right 100px bottom;
+	background-size: 900px;
+	height: 500px;
+	position: relative;
+	overflow: hidden;
 }
 
-.unregBlockContent {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 5px;
+.unregArticle {
+	padding: 140px 0;
+	max-width: clamp(500px, 48vw, 900px);
 }
 
 .title {
-	font-size: 54px;
+	font-family: "Circe";
+	font-size: clamp(28px, 3vw, 54px);
 	font-weight: 400;
-	line-height: 54px;
+	line-height: clamp(42px, 4vw, 64px);
+	margin-bottom: 40px;
 }
 
 .buttonsContainer {
 	display: flex;
-	align-items: center;
-	gap: 24px;
-	margin-top: 40px;
+	gap: 16px;
+}
+
+@media (max-width: 1750px) {
+	.unregBlock {
+		background-size: clamp(500px, 48vw, 700px);
+	}
+}
+
+@media (max-width: 1200px) {
+	.unregBlock {
+		background-position: right -200px bottom;
+	}
+}
+
+@media (max-width: 768px) {
+	.title {
+		max-width: 343px;
+	}
+
+	.unregBlock {
+		background-image: url("/src/assets/img/imageUnregBlock.png");
+	}
 }

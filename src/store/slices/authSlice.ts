@@ -10,13 +10,15 @@ interface AuthState {
     role: Role | null;
     error: string | null;
     showLogoutModal: boolean;
+    isLoading: boolean;
 }
 
 const initialState: AuthState = {
     isAuthenticated: false,
     role: null,
     error: null,
-    showLogoutModal: false
+    showLogoutModal: false,
+    isLoading: true
 };
 
 const authSlice = createSlice({
@@ -42,9 +44,12 @@ const authSlice = createSlice({
         },
         setShowLogoutModal: (state, action: PayloadAction<boolean>) => {
             state.showLogoutModal = action.payload;
+        },
+        setAuthLoading: (state, action: PayloadAction<boolean>) => {
+            state.isLoading = action.payload;
         }
     }
 });
 
-export const { setAuth, setRole, clearAuth, setError, setShowLogoutModal } = authSlice.actions;
+export const { setAuth, setRole, clearAuth, setError, setShowLogoutModal, setAuthLoading } = authSlice.actions;
 export default authSlice.reducer;

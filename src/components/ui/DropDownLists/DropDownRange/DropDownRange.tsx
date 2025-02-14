@@ -1,88 +1,216 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import styles from "./DropDownRange.module.css";
-import DropDownItem from "../DropDownItem/DropDownItem";
+import Button, { ColorButton } from "@ui/Button/Button";
 
 interface DropDownRangeProps {
-	startYear?: number;
-	endYear?: number;
-	onChange?: (range: { start: string; end: string }) => void;
+	min?: number;
+	max?: number;
+	onChange?: (range: { min: number; max: number } | null) => void;
 	label?: string;
+	hasSlider?: boolean;
+	unit?: string;
+	value?: { min: number; max: number };
 }
 
-export const DropDownRange: FC<DropDownRangeProps> = ({
-	startYear = new Date().getFullYear(),
-	endYear = new Date().getFullYear(),
+const DropDownRange: FC<DropDownRangeProps> = ({
+	min = 0,
+	max = 9999999,
 	onChange,
-	label = "Год",
+	label,
+	hasSlider = false,
+	unit,
+	value,
 }) => {
-	const [range, setRange] = useState({
-		start: startYear.toString(),
-		end: endYear.toString(),
-	});
-
-	// Generate years array (from current year to 10 years back)
-	const currentYear = new Date().getFullYear();
-	const years = Array.from({ length: 11 }, (_, i) =>
-		(currentYear - 10 + i).toString()
+	const [isOpen, setIsOpen] = useState(false);
+	const [displayRange, setDisplayRange] = useState<{ min: number; max: number }>(
+		value || { min, max }
 	);
+	const [editRange, setEditRange] = useState<{ min: number; max: number }>(value || { min, max });
+	const [inputMin, setInputMin] = useState(editRange.min.toString());
+	const [inputMax, setInputMax] = useState(editRange.max.toString());
+	const [showLabel, setShowLabel] = useState(true);
+	const containerRef = useRef<HTMLDivElement>(null);
 
-	// Создаем массивы для обоих селекторов
-	const startYearOptions = years.map((year) => ({
-		id: year,
-		payLoad: year,
-	}));
+	useEffect(() => {
+		if (value === null || value === undefined) {
+			setDisplayRange({ min, max });
+			setEditRange({ min, max });
+			setInputMin(min.toString());
+			setInputMax(max.toString());
+			setShowLabel(true);
+		} else {
+			setDisplayRange(value);
+			setEditRange(value);
+			setInputMin(value.min.toString());
+			setInputMax(value.max.toString());
+			setShowLabel(false);
+		}
+	}, [value, min, max]);
 
-	// Фильтруем года для второго селектора на основе выбранного начального года
-	const endYearOptions = years
-		.filter((year) => parseInt(year) >= parseInt(range.start))
-		.map((year) => ({
-			id: year,
-			payLoad: year,
-		}));
+	useEffect(() => {
+		if (value) {
+			setDisplayRange(value);
+			setEditRange(value);
+			setInputMin(value.min.toString());
+			setInputMax(value.max.toString());
+		}
+	}, [value]);
 
-	const handleStartYearChange = (value: React.ReactNode) => {
-		const newStart = value as string;
-		// Если конечный год меньше начального, устанавливаем его равным начальному
-		const newEnd =
-			parseInt(range.end) < parseInt(newStart) ? newStart : range.end;
-
-		const newRange = { start: newStart, end: newEnd };
-		setRange(newRange);
-		onChange?.(newRange);
+	const handleInputChange = (value: string, type: "min" | "max") => {
+		const numValue = parseInt(value);
+		if (type === "min") {
+			setInputMin(value);
+			if (!isNaN(numValue)) {
+				const newMin = Math.max(min, Math.min(numValue, editRange.max));
+				setEditRange({ ...editRange, min: newMin });
+			}
+		} else {
+			setInputMax(value);
+			if (!isNaN(numValue)) {
+				const newMax = Math.min(max, Math.max(numValue, editRange.min));
+				setEditRange({ ...editRange, max: newMax });
+			}
+		}
 	};
 
-	const handleEndYearChange = (value: React.ReactNode) => {
-		const newRange = { ...range, end: value as string };
-		setRange(newRange);
-		onChange?.(newRange);
+	const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>, type: "min" | "max") => {
+		const value = parseInt(e.target.value);
+		if (type === "min") {
+			setEditRange({ ...editRange, min: value });
+			setInputMin(value.toString());
+		} else {
+			setEditRange({ ...editRange, max: value });
+			setInputMax(value.toString());
+		}
 	};
 
-	// Стили для компонентов DropDownItem
-	const dropDownStyles = {
-		padding: "6px 8px",
-		border: "1px solid #e0e0e0",
-		borderRadius: "4px",
-		gap: "7px",
-		justifyContent: "center",
+	const handleApply = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		setDisplayRange(editRange);
+		onChange?.(editRange);
+		setShowLabel(false);
+		setIsOpen(false);
 	};
+
+	const handleReset = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		const defaultRange = { min, max };
+		setDisplayRange(defaultRange);
+		setEditRange(defaultRange);
+		setInputMin(min.toString());
+		setInputMax(max.toString());
+		onChange?.(null);
+		setShowLabel(true);
+		setIsOpen(false);
+	};
+
+	const toggleDropdown = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		if (!isOpen) {
+			setEditRange(displayRange);
+			setInputMin(displayRange.min.toString());
+			setInputMax(displayRange.max.toString());
+		}
+		setIsOpen(!isOpen);
+	};
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+				setIsOpen(false);
+				setEditRange(displayRange);
+				setInputMin(displayRange.min.toString());
+				setInputMax(displayRange.max.toString());
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [displayRange]);
 
 	return (
-		<div className={styles.container}>
-			<label className={styles.label}>{label}</label>
-			<div className={styles.rangeContainer}>
-				<DropDownItem
-					title={range.start}
-					selects={startYearOptions}
-					onSelect={handleStartYearChange}
-					styleAddition={dropDownStyles}
-				/>
-				<span className={styles.separator}>—</span>
-				<DropDownItem
-					title={range.end}
-					selects={endYearOptions}
-					onSelect={handleEndYearChange}
-					styleAddition={dropDownStyles}
-				/>
+		<div className={styles.container} ref={containerRef} onClick={toggleDropdown}>
+			<div className={styles.labelContainer}>
+				{showLabel ? (
+					<label className={styles.label}>{label}</label>
+				) : (
+					<div className={styles.label}>
+						{displayRange.min} - {displayRange.max} {unit}
+					</div>
+				)}
+				<div className={styles.labelControls}>
+					<button className={styles.resetButton} onClick={handleReset}>
+						Сбросить
+					</button>
+					<div className={styles.minus}></div>
+				</div>
+			</div>
+
+			<div className={`${styles.dropdown} ${isOpen ? styles.show : ""}`}>
+				<div className={styles.inputs} onClick={(e) => e.stopPropagation()}>
+					<input
+						type="text"
+						value={inputMin}
+						onChange={(e) => handleInputChange(e.target.value, "min")}
+						placeholder={min.toString()}
+					/>
+					<div className={styles.minusRange}></div>
+					<input
+						type="text"
+						value={inputMax}
+						onChange={(e) => handleInputChange(e.target.value, "max")}
+						placeholder={max.toString()}
+					/>
+				</div>
+				{hasSlider && (
+					<div className={styles.sliderContainer} onClick={(e) => e.stopPropagation()}>
+						<div className={styles.values}>
+							<p>
+								<span>{editRange.min}</span> {unit}
+							</p>
+							<p>
+								<span>{editRange.max}</span> {unit}
+							</p>
+						</div>
+						<div className={styles.rangeSlider}>
+							<div
+								className={styles.sliderTrack}
+								style={{
+									background: `linear-gradient(
+										to right,
+										#d3d8e6 0%,
+										#d3d8e6 ${((editRange.min - min) / (max - min)) * 100}%,
+										#3498ff ${((editRange.min - min) / (max - min)) * 100}%,
+										#3498ff ${((editRange.max - min) / (max - min)) * 100}%,
+										#d3d8e6 ${((editRange.max - min) / (max - min)) * 100}%,
+										#d3d8e6 100%
+									)`,
+								}}
+							></div>
+							<input
+								type="range"
+								min={min}
+								max={max}
+								value={editRange.min}
+								onChange={(e) => handleSliderChange(e, "min")}
+								className={`${styles.slider} ${styles.sliderLeft}`}
+							/>
+							<input
+								type="range"
+								min={min}
+								max={max}
+								value={editRange.max}
+								onChange={(e) => handleSliderChange(e, "max")}
+								className={`${styles.slider} ${styles.sliderRight}`}
+							/>
+						</div>
+					</div>
+				)}
+				<Button colorButton={ColorButton.BLUE} onClick={handleApply} isFullWidth>
+					Показать результаты
+				</Button>
 			</div>
 		</div>
 	);

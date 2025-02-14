@@ -1,6 +1,6 @@
 import { FC, ReactNode, MouseEvent } from "react";
-import classNames from "classnames"; // Рекомендуется использовать эту библиотеку для управления классами
-import classes from "./button.module.css";
+import classNames from "classnames";
+import styles from "./button.module.css";
 
 export enum ColorButton {
 	GREEN = "greenButton",
@@ -10,36 +10,36 @@ export enum ColorButton {
 interface Props {
 	colorButton: ColorButton;
 	isLarge?: boolean;
+	isFullWidth?: boolean;
 	children: ReactNode;
-	paddingStyle?: {
-		topBottom: number;
-		leftRight: number;
-	};
 	disabled?: boolean;
 	onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 	type?: "button" | "submit" | "reset";
+	style?: {
+		fontWeight?: string;
+		fontSize?: string;
+		padding?: string;
+	};
 }
 
 const Button: FC<Props> = ({
 	colorButton,
 	isLarge = false,
+	isFullWidth = false,
 	children,
-	paddingStyle,
 	disabled = false,
 	onClick,
 	type = "button",
+	style,
 }) => {
-	const buttonClass = classNames(classes.button, classes[colorButton], {
-		[classes.largeButton]: isLarge,
+	const buttonClass = classNames(styles.button, styles[colorButton], {
+		[styles.largeButton]: isLarge,
+		[styles.fullWidthButton]: isFullWidth,
 	});
-
-	const stylePadding = paddingStyle
-		? { padding: `${paddingStyle.topBottom}px ${paddingStyle.leftRight}px` }
-		: undefined;
 
 	return (
 		<button
-			style={stylePadding}
+			style={style}
 			onClick={onClick}
 			className={buttonClass}
 			disabled={disabled}

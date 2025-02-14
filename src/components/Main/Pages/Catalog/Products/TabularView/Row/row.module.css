@@ -1,0 +1,101 @@
+.col2,
+.col3 {
+	width: 85px;
+}
+
+.col2 a,
+.col10 a {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	color: #0050cf;
+}
+
+.col2 a:hover,
+.col10 a:hover {
+	color: #3e82ef;
+	transition: all 0.5s ease;
+}
+
+.col4,
+.col5 {
+	width: 160px;
+}
+
+.col6 {
+	width: 100px;
+}
+
+.col7,
+.col8 {
+	width: 120px;
+}
+
+.col8 span {
+	display: block;
+}
+
+.col8 span:last-child {
+	margin-top: 4px;
+}
+
+.col9 {
+	text-wrap: nowrap;
+	overflow: hidden;
+	max-width: 110px;
+	position: relative;
+}
+
+.col10 {
+	width: 220px;
+}
+
+.col10 a {
+	display: block;
+	margin-top: 16px;
+}
+
+.imageCell {
+	width: 190px;
+	padding: 0 !important;
+	height: 110px;
+}
+
+.imageContainer {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.imageContainer img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.timeLeft {
+	text-wrap: nowrap;
+	font-size: inherit;
+	font-weight: 400;
+	color: #0a5dc2;
+	border-bottom: 1px solid #0a5dc2;
+}
+
+.tooltip {
+	position: fixed;
+	background: white;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 8px;
+	padding-bottom: 4px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	z-index: 1000;
+	min-width: max-content;
+	text-align: center;
+	pointer-events: none;
+	transform: translateX(-100%); /* Сдвигаем влево на свою ширину */
+}
+
+.tooltip div {
+	white-space: nowrap;
+}

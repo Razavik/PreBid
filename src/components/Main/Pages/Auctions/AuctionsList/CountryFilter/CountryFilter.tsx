@@ -24,7 +24,7 @@ export const CountryFilter: FC<CountryFilterProps> = ({
 				}`}
 				onClick={() => onCountrySelect("ALL")}
 			>
-				Все страны
+				Все
 			</button>
 			{countries
 				.filter((country) => country.short_name_ru !== "ALL")

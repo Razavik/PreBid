@@ -11,10 +11,14 @@
 	height: 5px;
 }
 
+.tableContainer {
+	overflow-x: scroll;
+}
+
 .tableContainer table {
 	width: 100%;
+	min-width: 1200px;
 	border-collapse: collapse;
-	overflow: hidden;
 	border-radius: 4px;
 	border-style: hidden;
 	box-shadow: 0 0 0 1px #d3d8e6;
@@ -52,74 +56,4 @@
 	align-items: center;
 	gap: 10px;
 	justify-content: center;
-}
-
-.col2,
-.col3 {
-	width: 85px;
-}
-
-.col2 a,
-.col10 a {
-	text-decoration-line: underline;
-	text-decoration-style: solid;
-	color: #0050cf;
-}
-
-.col2 a:hover,
-.col10 a:hover {
-	color: #3e82ef;
-	transition: all 0.5s ease;
-}
-
-.col4,
-.col5 {
-	width: 160px;
-}
-
-.col6 {
-	width: 100px;
-}
-
-.col7,
-.col8 {
-	width: 120px;
-}
-
-.col8 span {
-	display: block;
-}
-
-.col8 span:last-child {
-	margin-top: 4px;
-}
-
-.col9 {
-	width: 110px;
-}
-
-.col10 {
-	width: 220px;
-}
-
-.col10 a {
-	display: block;
-	margin-top: 16px;
-}
-
-.imageCell {
-	width: 200px;
-	height: 100px;
-	padding: 0 !important;
-}
-
-.imageContainer {
-	position: relative;
-	width: 100%;
-	overflow: hidden;
-}
-
-.imageContainer img {
-	display: block;
-	width: 260px;
 }

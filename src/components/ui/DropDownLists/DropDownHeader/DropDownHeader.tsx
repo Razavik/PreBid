@@ -23,10 +23,7 @@ const DropDown: FC<Props> = ({ label, selects }: Props) => {
 	}
 
 	const handleOutsideClick = (event: MouseEvent) => {
-		if (
-			dropdownRef.current &&
-			!dropdownRef.current.contains(event.target as Node)
-		) {
+		if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 			setIsEnabled(false);
 		}
 	};
@@ -38,9 +35,7 @@ const DropDown: FC<Props> = ({ label, selects }: Props) => {
 		};
 	}, []);
 
-	const styleDropDownList = `${style.dropDownList} ${
-		isEnabled ? style.show : ""
-	}`.trim();
+	const styleDropDownList = `${style.dropDownList} ${isEnabled ? style.show : ""}`.trim();
 
 	const styleArrowReverse = isEnabled ? style.reverse : "";
 
@@ -54,16 +49,13 @@ const DropDown: FC<Props> = ({ label, selects }: Props) => {
 			<label htmlFor={label}>{label}</label>
 
 			<div className={style.dropDownMenu}>
-				<button id={label} onClick={handleClick}>
+				<span id={label} onClick={handleClick}>
 					{mainSelect}
-				</button>
+				</span>
 				<img className={styleArrowReverse} src={arrow} alt="arrow" />
 				<ul className={styleDropDownList}>
 					{selects.map((select) => (
-						<li
-							key={select.id}
-							onClick={() => handleSelectChange(select.payLoad)}
-						>
+						<li key={select.id} onClick={() => handleSelectChange(select.payLoad)}>
 							{select.payLoad}
 						</li>
 					))}

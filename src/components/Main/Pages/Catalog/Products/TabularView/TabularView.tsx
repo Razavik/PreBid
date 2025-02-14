@@ -1,9 +1,10 @@
 import { FC, useState } from "react";
 import style from "./tabularview.module.css";
-import Button, { ColorButton } from "@ui/Button/Button";
 import arrowSort from "@assets/img/icons/arrowSort.svg";
-import BookmarkButton from "@components/ui/BookmarkButton/BookmarkButton";
-import { Data } from "../Products";
+import { Transport } from "types/catalog.types";
+import Row from "./Row/Row";
+import { useSelector } from "react-redux";
+import { RootState } from "@store/store";
 
 enum SortDirection {
 	DEFAULT = "default",
@@ -12,13 +13,13 @@ enum SortDirection {
 }
 
 interface Props {
-	data: Data;
-	setCountProducts: (count: number) => void;
+	products: Transport[];
+	isAuthenticated: boolean;
+	onSort: (field: string, direction: "asc" | "desc") => void;
+	onBid: (currentPrice: number, auctionId: number, transportId: number) => void;
 }
 
-const TabularView: FC<Props> = ({ data, setCountProducts }) => {
-	setCountProducts(data.products.length);
-
+const TabularView: FC<Props> = ({ products, isAuthenticated, onSort, onBid }) => {
 	const arrowSortAscending = <img src={arrowSort} />;
 	const arrowSortDescending = (
 		<img
@@ -29,61 +30,56 @@ const TabularView: FC<Props> = ({ data, setCountProducts }) => {
 		/>
 	);
 
-	const [sortDirection, setSortDirection] = useState<SortDirection>(
-		SortDirection.DEFAULT
-	);
+	const [sortDirection, setSortDirection] = useState<Record<string, SortDirection>>({});
 	const [sortKey, setSortKey] = useState<string | null>(null);
-	const [products, setProducts] = useState<Data["products"]>(data.products);
 
-	const paddingStyle = {
-		topBottom: 12,
-		leftRight: 32,
+	const userId = useSelector((state: RootState) => state.user.info?.id);
+
+	const getNextSortDirection = (currentDirection: SortDirection) => {
+		switch (currentDirection) {
+			case SortDirection.DEFAULT:
+				return SortDirection.ASCENDING;
+			case SortDirection.ASCENDING:
+				return SortDirection.DESCENDING;
+			case SortDirection.DESCENDING:
+			default:
+				return SortDirection.DEFAULT;
+		}
 	};
 
 	const handleSort = (key: string) => {
-		let newDirection: SortDirection;
-		if (sortKey !== key) {
-			newDirection = SortDirection.ASCENDING;
-		} else {
-			switch (sortDirection) {
-				case SortDirection.DEFAULT:
-					newDirection = SortDirection.ASCENDING;
-					break;
-				case SortDirection.ASCENDING:
-					newDirection = SortDirection.DESCENDING;
-					break;
-				case SortDirection.DESCENDING:
-				default:
-					newDirection = SortDirection.DEFAULT;
-					break;
-			}
-		}
+		const currentDirection = sortDirection[key] || SortDirection.DEFAULT;
+		const newDirection = getNextSortDirection(currentDirection);
 
-		setSortDirection(newDirection);
+		setSortDirection((prev) => ({
+			...prev,
+			[key]: newDirection,
+		}));
+
 		setSortKey(key);
 
 		if (newDirection === SortDirection.DEFAULT) {
-			setProducts(data.products);
+			onSort("id", "asc");
 			return;
 		}
 
-		const sorted = [...products];
-		sorted.sort((a: any, b: any) => {
-			const valueA = key === "mileage" ? parseInt(a[key]) : a[key];
-			const valueB = key === "mileage" ? parseInt(b[key]) : b[key];
+		const apiSortKeys: Record<string, string> = {
+			id: "id",
+			year: "year",
+			brand: "brand",
+			model: "model",
+			volume: "volume",
+			odometer: "odometer",
+			date: "date",
+		};
 
-			if (newDirection === SortDirection.ASCENDING) {
-				return valueA > valueB ? 1 : -1;
-			} else {
-				return valueA < valueB ? 1 : -1;
-			}
-		});
-
-		setProducts(sorted);
+		const apiKey = apiSortKeys[key] || key;
+		const direction = newDirection.toLowerCase() as "asc" | "desc";
+		onSort(apiKey, direction);
 	};
 
 	const getSortIcon = (key: string) => {
-		if (sortKey !== key || sortDirection === SortDirection.DEFAULT) {
+		if (sortKey !== key || sortDirection[key] === SortDirection.DEFAULT) {
 			return (
 				<div className={style.ascDes}>
 					{arrowSortAscending}
@@ -91,10 +87,10 @@ const TabularView: FC<Props> = ({ data, setCountProducts }) => {
 				</div>
 			);
 		}
-		if (sortDirection === SortDirection.ASCENDING) {
+		if (sortDirection[key] === SortDirection.ASCENDING) {
 			return arrowSortAscending;
 		}
-		if (sortDirection === SortDirection.DESCENDING) {
+		if (sortDirection[key] === SortDirection.DESCENDING) {
 			return arrowSortDescending;
 		}
 		return null;
@@ -107,10 +103,7 @@ const TabularView: FC<Props> = ({ data, setCountProducts }) => {
 					<tr>
 						<th>Фото</th>
 						<th>№ Лота</th>
-						<th
-							onClick={() => handleSort("year")}
-							style={{ cursor: "pointer" }}
-						>
+						<th onClick={() => handleSort("year")} style={{ cursor: "pointer" }}>
 							<div>
 								<span>Год</span>
 								{getSortIcon("year")}
@@ -118,37 +111,25 @@ const TabularView: FC<Props> = ({ data, setCountProducts }) => {
 						</th>
 						<th>Марка</th>
 						<th>Модель</th>
-						<th
-							onClick={() => handleSort("engineVolume")}
-							style={{ cursor: "pointer" }}
-						>
+						<th onClick={() => handleSort("volume")} style={{ cursor: "pointer" }}>
 							<div>
 								<span>Объем</span>
-								{getSortIcon("engineVolume")}
+								{getSortIcon("volume")}
 							</div>
 						</th>
-						<th
-							onClick={() => handleSort("mileage")}
-							style={{ cursor: "pointer" }}
-						>
+						<th onClick={() => handleSort("odometer")} style={{ cursor: "pointer" }}>
 							<div>
 								<span>Одометр</span>
-								{getSortIcon("mileage")}
+								{getSortIcon("odometer")}
 							</div>
 						</th>
-						<th
-							onClick={() => handleSort("datetime.date")}
-							style={{ cursor: "pointer" }}
-						>
+						<th onClick={() => handleSort("date")} style={{ cursor: "pointer" }}>
 							<div>
 								<span>Дата</span>
-								{getSortIcon("datetime.date")}
+								{getSortIcon("date")}
 							</div>
 						</th>
-						<th
-							onClick={() => handleSort("bid")}
-							style={{ cursor: "pointer" }}
-						>
+						<th onClick={() => handleSort("bid")} style={{ cursor: "pointer" }}>
 							<div>
 								<span>Ставка</span>
 								{getSortIcon("bid")}
@@ -158,51 +139,14 @@ const TabularView: FC<Props> = ({ data, setCountProducts }) => {
 					</tr>
 				</thead>
 				<tbody>
-					{products.map((product, index) => (
-						<tr key={index}>
-							<td className={style.imageCell}>
-								<div className={style.imageContainer}>
-									<BookmarkButton 
-										productId={product.lotNumber}
-										onToggle={(id, state) => {
-											console.log(`Product ${id} bookmark state: ${state}`);
-											// Add your bookmark logic here
-										}}
-									/>
-									<img
-										src={data.path + product.photos[0]}
-										alt="car"
-									/>
-								</div>
-							</td>
-							<td className={style.col2}>
-								<a href="#">{product.lotNumber}</a>
-							</td>
-							<td className={style.col3}>{product.year}</td>
-							<td className={style.col4}>{product.brand}</td>
-							<td className={style.col5}>{product.model}</td>
-							<td className={style.col6}>
-								{product.engineVolume}
-							</td>
-							<td className={style.col7}>{product.mileage}</td>
-							<td className={style.col8}>
-								<span>{product.datetime.date}</span>
-								<span>{product.datetime.time}</span>
-							</td>
-							<td className={style.col9}>{product.bid}$</td>
-							<td className={style.col10}>
-								<Button
-									colorButton={ColorButton.BLUE}
-									paddingStyle={paddingStyle}
-									disabled={product.disabled ? true : false}
-								>
-									Сделать ставку
-								</Button>
-								<a href="#">
-									Купить сейчас за {product.buyNowPrice}$
-								</a>
-							</td>
-						</tr>
+					{products.map((product) => (
+						<Row
+							key={product.general.id}
+							product={product}
+							isAuthenticated={isAuthenticated}
+							userId={userId}
+							onBid={onBid}
+						/>
 					))}
 				</tbody>
 			</table>

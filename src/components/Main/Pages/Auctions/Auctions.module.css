@@ -10,3 +10,9 @@
 .content {
 	width: 100%;
 }
+
+@media (max-width: 1200px) {
+	.auctions {
+		flex-direction: column;
+	}
+}

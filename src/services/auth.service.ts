@@ -1,8 +1,9 @@
 import axiosInstance from './axios.config';
-import { setJwtToken, removeJwtToken, getJwtToken } from '@utils/jwt';
-import { store } from '../store/store';
-import { setAuth, setRole, clearAuth } from "@store/slices/authSlice";
+import { setJwtToken, removeJwtToken, getJwtToken, setRefreshToken, removeRefreshToken, getRefreshToken } from '@utils/jwt';
+import { store } from "@store/store";
+import { setAuth, setRole, clearAuth, setAuthLoading } from "@store/slices/authSlice";
 import { setUserInfo, clearUserInfo } from "@store/slices/userSlice";
+import { ApiUserResponse, Client } from 'types/user.types';
 
 interface LoginData {
     username: string;
@@ -11,6 +12,7 @@ interface LoginData {
 
 interface LoginResponse {
     access_token: string;
+    refresh_token: string;
     token_type: string;
     expires_in: number;
 }
@@ -23,9 +25,9 @@ interface RegisterData {
     password: string;
 }
 
-const API_URL = 'https://autoru.neonface.by/api/v2';
-const CLIENT_ID = 6;
-const CLIENT_SECRET = "XsCXIvC6CF6tGLSqWN7e7juDAe0DNeJBQ54JbH07";
+const API_URL = import.meta.env.VITE_API_URL;
+const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
+const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
 
 export const authService = {
     async login(data: LoginData): Promise<LoginResponse> {
@@ -41,12 +43,15 @@ export const authService = {
 
             if (response.data.access_token) {
                 setJwtToken(response.data.access_token);
+                if (response.data.refresh_token) {
+                    setRefreshToken(response.data.refresh_token);
+                }
 
                 // Получаем данные пользователя
                 const userInfo = await this.getUserInfo();
 
                 if (userInfo) {
-                    store.dispatch(setUserInfo(userInfo.client));
+                    store.dispatch(setUserInfo(userInfo));
                     if (userInfo.role) {
                         store.dispatch(setRole(userInfo.role));
                     }
@@ -72,7 +77,6 @@ export const authService = {
                 const userInfo = await this.getUserInfo();
                 if (userInfo) {
                     store.dispatch(setUserInfo(userInfo));
-                    localStorage.setItem("user_info", JSON.stringify(userInfo));
                     store.dispatch(setAuth(true));
                 }
             }
@@ -89,12 +93,11 @@ export const authService = {
             await axiosInstance.post(`${API_URL}/user/logout`);
         } catch (error: any) {
             console.error('Ошибка при выходе из системы:', error.response?.data || error.message);
-        } finally {
-            removeJwtToken();
-            store.dispatch(clearAuth());
-            store.dispatch(clearUserInfo());
-            localStorage.removeItem("user_info");
         }
+        removeJwtToken();
+        removeRefreshToken();
+        store.dispatch(clearAuth());
+        store.dispatch(clearUserInfo());
     },
 
     getToken() {
@@ -104,6 +107,7 @@ export const authService = {
     async checkAuth() {
         const token = getJwtToken();
         if (!token) {
+            store.dispatch(setAuthLoading(false));
             this.logout();
             return;
         }
@@ -116,20 +120,24 @@ export const authService = {
                     store.dispatch(setRole(userInfo.role));
                 }
                 store.dispatch(setAuth(true));
-                localStorage.setItem("user_info", JSON.stringify(userInfo));
             }
+            store.dispatch(setAuthLoading(false));
         } catch (error) {
             console.error('Ошибка при проверке авторизации:', error);
             this.logout();
+            store.dispatch(setAuthLoading(false));
         }
     },
 
-    async getUserInfo() {
+    async getUserInfo(): Promise<Client> {
         try {
-            const response = await axiosInstance.get(`${API_URL}/user/information`);
-            const userData = {
-                ...response.data,
-                role: response.data.role || null
+            const response = await axiosInstance.get<ApiUserResponse>(`${API_URL}/user/information`);
+            const userData: Client = {
+                id: response.data.user.id,
+                email: response.data.user.email,
+                name_ru: response.data.client.name_ru,
+                second_name_ru: response.data.client.second_name_ru,
+                role: response.data.role
             };
             return userData;
         } catch (error: any) {
@@ -140,17 +148,26 @@ export const authService = {
 
     async refreshToken(): Promise<string | null> {
         try {
-            const response = await axiosInstance.post(`${API_URL}/user/refresh-token`);
+            const refresh_token = getRefreshToken();
+            if (!refresh_token) return null;
+
+            const response = await axiosInstance.post(`${API_URL}/user/refresh-token`, {
+                refresh_token,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET
+            });
 
             if (response.data.access_token) {
-                const newToken = response.data.access_token;
-                setJwtToken(newToken);
-                return newToken;
+                setJwtToken(response.data.access_token);
+                if (response.data.refresh_token) {
+                    setRefreshToken(response.data.refresh_token);
+                }
+                return response.data.access_token;
             }
-
             return null;
-        } catch (error: any) {
-            console.error("Refresh token error:", error);
+        } catch (error) {
+            console.error('Ошибка при обновлении токена:', error);
+            this.logout(); // Если обновление не удалось, выходим из системы
             return null;
         }
     }

@@ -52,7 +52,7 @@ export const AddAuction: FC<AddAuctionProps> = ({ countries, onSuccess }) => {
 			};
 
 			await auctionsService.createAuction(auctionData);
-			
+
 			// Очищаем форму
 			setFormData({
 				name: "",

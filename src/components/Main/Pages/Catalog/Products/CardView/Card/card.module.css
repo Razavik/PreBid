@@ -1,0 +1,157 @@
+.card {
+	width: 100%;
+	height: 100%;
+	background: #ffffff;
+	border: 1px solid #e1e3e7;
+	border-radius: 8px;
+	transition: transform 0.2s ease-in-out;
+	display: flex;
+	flex-direction: column;
+}
+
+.card:hover {
+	transform: translateY(-5px);
+}
+
+.card .photoContainer {
+	position: relative;
+	width: 100%;
+	height: 170px;
+}
+
+.card .photoContainer img {
+	width: 100%;
+}
+
+.details {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	padding: 16px;
+	flex: 1;
+}
+
+.textInfo {
+	display: flex;
+	flex-direction: column;
+}
+
+.textInfo h3 {
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 24px;
+	margin: 0 0 12px;
+	color: #333;
+}
+
+.textInfo > p {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-right: 8px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #d9d9d9;
+	margin-bottom: 8px;
+	color: #1e1e1e;
+}
+
+.textInfo > p > span:first-child {
+	color: #6b7a99;
+	line-height: 24px;
+}
+
+.textInfo > p > a {
+	font-size: 16px;
+	line-height: 24px;
+	text-decoration-line: underline;
+	text-decoration-style: solid;
+	color: #0050cf;
+}
+
+.textInfo > p > a:hover {
+	color: #3e82ef;
+	transition: all 0.5s ease;
+}
+.priceInfo {
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+
+.priceInfo .priceAndButton {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.priceInfo .price {
+	display: flex;
+	flex-direction: column;
+}
+
+.priceInfo .price span:first-of-type {
+	font-size: 14px;
+}
+
+.priceInfo .price span:last-of-type {
+	font-weight: 700;
+}
+
+.yourRate {
+	margin-top: 25px;
+	width: max-content;
+	margin-left: auto;
+}
+
+.yourRate span:last-of-type {
+	font-weight: 700;
+}
+
+.date {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px;
+	border-radius: 8px;
+	font-size: 20px;
+	line-height: inherit;
+}
+
+.date span:first-of-type {
+	font-size: inherit;
+	font-weight: 700;
+	color: black;
+}
+
+.date span:last-of-type {
+	font-size: inherit;
+	font-weight: 400;
+	color: #0a5dc2;
+	border-bottom: 1px solid #0a5dc2;
+}
+
+.contentWrapper {
+	position: relative;
+}
+
+.bidStarted {
+	display: block;
+	font-size: 20px;
+	width: 100%;
+	text-align: center;
+	margin-bottom: 25px;
+}
+
+.authOverlay {
+	position: absolute;
+	top: 0;
+	align-items: center;
+	justify-content: center;
+	z-index: 10;
+	border-radius: 8px;
+	width: calc(100% + 5px);
+}
+
+.authMessage {
+	color: white;
+}
